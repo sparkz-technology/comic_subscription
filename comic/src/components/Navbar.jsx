@@ -1,6 +1,8 @@
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
+import { Logo } from "../ui/Logo";
 function Navbar() {
   const navigate = useNavigate();
   function handleSignOut() {
@@ -10,7 +12,11 @@ function Navbar() {
   }
   return (
     <StyledNavbar>
-      <Logo>Comic World</Logo>
+      <div>
+        <Logo />
+        <h1>Comic World</h1>
+      </div>
+
       <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
     </StyledNavbar>
   );
@@ -26,18 +32,28 @@ const StyledNavbar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 0px 20px;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
   box-sizing: border-box;
   z-index: 1;
   // shadow effect
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+  }
+  div {
+    display: flex;
+    align-items: center;
+  }
 `;
 
-const Logo = styled.h1`
-  margin: 0;
-`;
+// const Logo = styled.h1`
+//   margin: 0;
+// `;
 
 const SignOutButton = styled.button`
   background-color: #fff;

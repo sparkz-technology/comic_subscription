@@ -20,7 +20,6 @@ function Dashboard() {
   const createSubscription = async () => {
     try {
       const response = await CreateSubscription();
-      console.log(response);
       const { subscriptionId, clientSecret } = response;
       console.log(subscriptionId, clientSecret);
       dispatch(setSubscriptionData({ subscriptionId, clientSecret }));
@@ -34,9 +33,9 @@ function Dashboard() {
     const fetchData = async () => {
       const subscriptionsData = await GetSubscriptionDetails();
       dispatch(
-        setSubscriptionStatus(subscriptionsData?.latestSubscription.status)
+        setSubscriptionStatus(subscriptionsData?.latestSubscription?.status)
       );
-      Cookies.set("subscriptionId", subscriptionsData?.latestSubscription.id);
+      Cookies.set("subscriptionId", subscriptionsData?.latestSubscription?.id);
     };
     fetchData();
   }, [dispatch]);
@@ -103,6 +102,7 @@ const StyledPlan = styled.div`
     font-weight: 700;
     text-align: center;
     padding: 0 20px;
+    margin: 0;
   }
 
   h1 {

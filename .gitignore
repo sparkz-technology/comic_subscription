@@ -3,3 +3,4 @@
 /comic/node_modules
 /trial_microservice/node_modules
 /subscription_microservice/node_modules
+# stripe listen --forward-to http://localhost:8000/webhook

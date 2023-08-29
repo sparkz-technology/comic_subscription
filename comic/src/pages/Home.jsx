@@ -2,12 +2,17 @@ import EmailForm from "../components/EmailForm";
 import { Container, BackgroundImage, StyledHome } from "../styles/Home";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { Logo } from "../ui/Logo";
 
 function Home() {
   return (
     <Container>
       <Navbar>
-        <h1>Comic world</h1>
+        <div>
+          <Logo theme="dark" />
+          <h1>Comic World</h1>
+        </div>
+
         <StyledLink to="/register">Register</StyledLink>
       </Navbar>
       <BackgroundImage />
@@ -42,6 +47,10 @@ const Navbar = styled.div`
     font-size: 24px;
     font-weight: 600;
     color: #fff;
+  }
+  div {
+    display: flex;
+    align-items: center;
   }
 `;
 const StyledLink = styled(Link)`
