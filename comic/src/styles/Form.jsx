@@ -6,6 +6,9 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  @media (max-width: 768px) {
+    margin-top: 0;
+  }
 `;
 
 export const InputContainer = styled.div`

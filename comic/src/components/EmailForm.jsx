@@ -75,6 +75,9 @@ const Container = styled.div`
 const InputContainer = styled.div`
   display: flex;
   align-items: center;
+  @media (max-width: 768px) {
+    padding: 0 20px;
+  }
 `;
 
 const ErrorMessage = styled.div`

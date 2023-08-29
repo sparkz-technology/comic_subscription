@@ -44,4 +44,17 @@ export const StyledHome = styled.div`
     font-size: 1.5rem;
     margin: 0;
   }
+  @media (max-width: 768px) {
+    h1 {
+      margin: 0;
+      font-size: 5rem;
+      padding: 0 20px;
+    }
+    h2 {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 1rem;
+    }
+  }
 `;

@@ -130,4 +130,9 @@ const Header = styled.div`
     color: #fff;
     text-align: center;
   }
+  @media (max-width: 768px) {
+    q {
+      font-size: 2rem;
+    }
+  }
 `;

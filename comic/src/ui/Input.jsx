@@ -16,6 +16,9 @@ export const Input = styled.input`
   &:focus {
     border-color: #333;
   }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 export const FieldInput = styled(Field)`
   height: 40px;
@@ -30,5 +33,8 @@ export const FieldInput = styled(Field)`
 
   &:focus {
     border-color: #333;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
