@@ -9,6 +9,7 @@ module.exports = async (req, res, next) => {
     const decodedToken = await jwt.verify(token, config.jwt_secret);
     req.userId = decodedToken.userId; //add new field to the request
     const user = await User.findOne({ _id: req.userId });
+    console.log(user);
     if (!user) throw error;
 
     next();

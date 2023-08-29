@@ -1,5 +1,6 @@
 import { toast } from "react-hot-toast";
 import Axios from "axios";
+import Cookies from "js-cookie";
 
 export const SubscriptionCancel = async (subscriptionId) => {
   console.log(subscriptionId);
@@ -10,6 +11,7 @@ export const SubscriptionCancel = async (subscriptionId) => {
       {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ subscriptionId }),
@@ -30,6 +32,9 @@ export const GetSubscription = async () => {
       {
         method: "GET",
         credentials: "include",
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
       }
     );
     const data = await response.json();
@@ -48,6 +53,7 @@ export const CreateSubscription = async () => {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
         },
         body: JSON.stringify({
           priceId,
@@ -124,6 +130,9 @@ export const GetSubscriptionDetails = async () => {
       {
         method: "GET",
         credentials: "include",
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
       }
     );
     const data = await response.json();
