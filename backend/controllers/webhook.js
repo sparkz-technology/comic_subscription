@@ -60,6 +60,7 @@ exports.webhook = async (request, response) => {
         });
         userDeleted.subscriptionStatus = subscriptionDeleted.status;
         await userDeleted.save();
+        await subscription("cancelSubscription", userDeleted);
       } catch (err) {
         console.log(err, "customer.subscription.deleted");
       }
@@ -106,7 +107,7 @@ exports.webhook = async (request, response) => {
           customerId: paymentIntentSucceeded.customer,
         });
 
-        subscription(userPaymentIntent);
+        subscription("subscription", userPaymentIntent);
       } catch (err) {
         console.log(err, "payment_intent.succeeded");
       }

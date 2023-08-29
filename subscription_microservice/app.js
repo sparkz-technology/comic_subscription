@@ -5,30 +5,45 @@ const schedule = require("node-schedule");
 const { subscriber } = require("./controllers/user");
 const { deleteSubscribers } = require("./controllers/user");
 const config = require("./config/config");
-// const sendEmail = require("./services/mail");
-// const sendConfirmationMail = require("./services/mail");
-const { sendMail, sendConfirmationMail } = require("./services/mail");
+const {
+  sendMail,
+  sendConfirmationMail,
+  sendCancelMail,
+} = require("./services/mail");
 
 mongoose.connect(config.mongo_url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-connect();
-async function connect() {
+async function connectQuery() {
+  await connect("cancelSubscription");
+  await connect("subscription");
+  console.log(`Connected to RabbitMQ in Subscription Microservice!`);
+}
+connectQuery();
+async function connect(queue) {
   try {
-    const connection = await ampq.connect("amqp://127.0.0.1:5672");
+    const connection = await ampq.connect("amqp://localhost");
     const channel = await connection.createChannel();
-    console.log("Connected to RabbitMQ");
-    const queue = "subscription";
+    // const queue = "subscription";
     await channel.purgeQueue(queue);
     await channel.assertQueue(queue, { durable: false });
     channel.consume(queue, async (message) => {
-      console.log(`Received message: ${message.content.toString()}`);
-      const consume = JSON.parse(message.content.toString());
-      console.log(`Received message: ${consume}`);
-      await subscriber(consume);
-      await sendConfirmationMail(consume);
-      channel.ack(message);
+      if (queue === "subscription") {
+        console.log(`Received message: ${message.content.toString()}`);
+        const consume = JSON.parse(message.content.toString());
+        console.log(`Received message: ${consume}`);
+        await subscriber(consume);
+        await sendConfirmationMail(consume);
+        channel.ack(message);
+      }
+      if (queue === "cancelSubscription") {
+        console.log(`Received message: ${message.content.toString()}`);
+        const consume = JSON.parse(message.content.toString());
+        console.log(`Received message: ${consume} from ${queue}`);
+        await sendCancelMail(consume);
+        channel.ack(message);
+      }
     });
   } catch (error) {
     console.log(error);

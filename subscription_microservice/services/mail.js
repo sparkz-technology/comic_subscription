@@ -101,5 +101,51 @@ async function sendConfirmationMail(consume) {
     console.log(err);
   }
 }
+async function sendCancelMail(consume) {
+  const {
+    email,
+    customerId,
+    subscriptionId,
+    Current_period_end,
+    subscriptionStatus,
+  } = consume;
+  try {
+    const templatePath = path.join(__dirname, "../templates/cancel.html");
 
-module.exports = { sendMail, sendConfirmationMail };
+    // Read the email template
+    const template = await readFile(templatePath, "utf-8");
+    const personalizedTemplate = template
+      .replace("[Subscriber's Name]", email.split("@")[0])
+      .replace("[customerId]", customerId)
+      .replace("[subscriptionId]", subscriptionId)
+
+      .replace("[Current_period_end]", Current_period_end)
+      .replace("[Cancellation_date]", new Date().toLocaleDateString())
+      .replace("[subscriptionStatus]", subscriptionStatus);
+
+    const mailOptions = {
+      from: config.email,
+      to: email,
+      subject: "Comic World ",
+      html: personalizedTemplate,
+      attachments: [
+        {
+          filename: "logo.png",
+          path: logoUrl,
+          cid: "logoImage",
+        },
+      ],
+    };
+
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      return `Email sent to ${email}: ${info.response}`;
+    } catch (error) {
+      return `Error sending email to ${email}: ${error}`;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+module.exports = { sendMail, sendConfirmationMail, sendCancelMail };
