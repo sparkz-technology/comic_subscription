@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { toast } from "react-hot-toast";
+import { Formik, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
+import { FieldInput } from "../ui/Input";
+import { Button } from "../ui/Button";
 import { setShowSubscribe, setSubscriptionStatus } from "../SubscribeSlice";
 
 const Subscribe = () => {
   const navigate = useNavigate(); // Fix the function name here
   const dispatch = useDispatch();
   const clientSecret = useSelector((state) => state.subscribe.clientSecret);
-  const [name, setName] = useState("sparky");
   const [paymentIntent, setPaymentIntent] = useState();
 
   useEffect(() => {
@@ -29,9 +32,7 @@ const Subscribe = () => {
     return null; // You can return an empty component here if needed
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async (value) => {
     const cardElement = elements.getElement(CardElement);
 
     const { error, paymentIntent } = await stripe.confirmCardPayment(
@@ -40,7 +41,7 @@ const Subscribe = () => {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name,
+            name: value.name,
           },
         },
       }
@@ -52,26 +53,30 @@ const Subscribe = () => {
     }
     setPaymentIntent(paymentIntent);
   };
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+  });
 
   return (
     <>
       <h1>Subscribe</h1>
       <p> Unlock Limitless Adventures: Subscribe Now!</p>
-      <Form onSubmit={handleSubmit}>
-        <label>
-          Full name
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </label>
+      <Formik
+        initialValues={{ name: "" }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <StyledForm>
+          <FieldInput type="text" id="name" name="name" placeholder="Name" />
+          <ErrorContainer name="name" component="div" />
 
-        <StyledCardElement />
+          <StyledCardElement />
 
-        <button>Subscribe</button>
-      </Form>
+          <Button variant="subscribe" width="200px" type="submit">
+            Subscribe
+          </Button>
+        </StyledForm>
+      </Formik>
     </>
   );
 };
@@ -87,41 +92,33 @@ const StyledCardElement = styled(CardElement)`
   width: 100%;
   min-width: 400px;
   max-width: 450px;
+  box-sizing: border-box;
   @media (max-width: 768px) {
-    width: 100%;
+    width: 90%;
     padding: 10px;
   }
 `;
-const Form = styled.form`
-  lable {
-    display: block;
-    margin-bottom: 10px;
-  }
+const ErrorContainer = styled(ErrorMessage)`
+  color: var(--red-color);
+  font-weight: bold;
+`;
+const StyledForm = styled(Form)`
   input {
-    display: block;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 0 20px;
+    margin-right: 10px;
+    height: 40px;
     width: 100%;
     min-width: 400px;
-    padding: 10px 14px;
-    border-radius: 4px;
+    max-width: 450px;
     border: 1px solid #ccc;
-    margin-bottom: 20px;
-    @media (max-width: 768px) {
-      width: 100%;
-      padding: 10px;
-    }
+    box-sizing: border-box;
   }
   button {
-    display: block;
-    padding: 10px 14px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background: var(--red-color);
-    cursor: pointer;
-    color: #fff;
-    font-weight: bold;
-    font-size: 16px;
-    &:hover {
-      background: var(--red-color-hover);
-    }
+    margin-top: 10px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;

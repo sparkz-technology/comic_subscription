@@ -129,9 +129,9 @@ exports.postCancelSubscription = async (req, res, next) => {
     const canceledSubscription = await stripe.subscriptions.cancel(
       subscriptionId
     );
-    const updateUser = await User.findOne({ subscriptionId: subscriptionId });
-    updateUser.subscriptionStatus = canceledSubscription.status;
-    await updateUser.save();
+    // const updateUser = await User.findOne({ subscriptionId: subscriptionId });
+    // updateUser.subscriptionStatus = canceledSubscription.status;
+    // await updateUser.save();
     console.warn("testing purpose");
     console.log(canceledSubscription, "canceledSubscription");
     res.status(200).send({ canceledSubscription });
