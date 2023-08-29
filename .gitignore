@@ -1,0 +1,5 @@
+/node_modules
+/backend/node_modules
+/comic/node_modules
+/trial_microservice/node_modules
+/subscription_microservices/node_modules
