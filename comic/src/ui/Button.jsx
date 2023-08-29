@@ -14,8 +14,7 @@ const Variant = {
 export const Button = styled.button`
   height: 40px;
   width: ${(props) => (props.width ? props.width : "100%")};
-  border-radius: ${(props) =>
-    props.variant === "subscribe" ? "0px 5px 5px 0px" : "5px"};
+  border-radius: 5px;
   border: none;
   padding: 0 10px;
   font-size: 16px;

@@ -5,4 +5,5 @@ module.exports = {
   mongo_url: process.env.MONGO_URI,
   price_id: process.env.PRICE_ID,
   stripe_secret_key: process.env.STRIPE_SECRET_KEY,
+  jwt_secret: process.env.JWT_SECRET,
 };

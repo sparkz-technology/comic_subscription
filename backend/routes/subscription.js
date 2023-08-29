@@ -1,8 +1,35 @@
 const express = require("express");
 const router = express.Router();
+const { body } = require("express-validator");
+
+const User = require("../models/user");
 const subscriptionController = require("../controllers/subscription");
 
-router.post("/create-customer", subscriptionController.postCreateCustomer);
+router.post(
+  "/create-customer",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please enter a valid email")
+      .custom((value) =>
+        User.findOne({ email: value }).then((userDoc) => {
+          if (userDoc) {
+            return Promise.reject(new Error("Email already exists"));
+          }
+        })
+      ),
+    body("password").trim().isLength({ min: 5 }),
+  ],
+  subscriptionController.postCreateCustomer
+);
+router.post(
+  "/retrieve-customer",
+  [
+    body("email").isEmail().withMessage("Please enter a valid email"),
+    body("password").trim().isLength({ min: 5 }),
+  ],
+  subscriptionController.postRetrieveCustomer
+);
 router.post("/create-subscription", subscriptionController.postSubscription);
 router.get(
   "/get-subscription-details",

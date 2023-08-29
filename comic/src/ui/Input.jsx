@@ -23,13 +23,13 @@ export const Input = styled.input`
 export const FieldInput = styled(Field)`
   height: 40px;
   width: ${(props) => (props.width ? props.width : "100%")};
-  border-radius: ${(props) =>
-    props.variant === "subscribe" ? "5px 0px 0px 5px" : "5px"};
+  border-radius: 5px;
   padding: 0 10px;
   font-size: 16px;
   box-sizing: border-box;
   outline: none;
   border: 0px;
+  width: 100%;
 
   &:focus {
     border-color: #333;

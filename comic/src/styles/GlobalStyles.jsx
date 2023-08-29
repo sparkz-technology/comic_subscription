@@ -14,6 +14,7 @@ const GlobalStyles = createGlobalStyle`
         --white-color:#f5f5f5;
         --red-color:#ec4f44;
         --red-color-hover:#d13f34;
+        --blue-color:#4936f4;
         
         --font-primary: sans-serif;
         --font-comic: 'Comic Neue', cursive;

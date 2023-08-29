@@ -1,4 +1,5 @@
 import { toast } from "react-hot-toast";
+import Axios from "axios";
 
 export const SubscriptionCancel = async (subscriptionId) => {
   console.log(subscriptionId);
@@ -60,25 +61,59 @@ export const CreateSubscription = async () => {
     console.log(error);
   }
 };
-
-export const CreateCustomer = async (email) => {
+export const RetrieveCustomer = async (email, password) => {
   try {
-    const response = await fetch(
-      "http://localhost:8000/subscription/create-customer",
+    const response = await Axios.post(
+      "http://localhost:8000/subscription/retrieve-customer",
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
+        email: email,
+        password: password,
       }
     );
-    const data = await response.json();
-    toast.success(data.message);
+    const data = await response.data;
+
+    toast.success("Customer login successfully");
     return data;
   } catch (error) {
+    toast.error(error.response.data.message || error.message);
+    // toast.error(
+    //   error.response.data.data[0].msg ||
+    //     error.message ||
+    //     error.response.data.message
+    // );
+  }
+};
+export const CreateCustomer = async (email, password) => {
+  try {
+    // const response = await fetch(
+    //   "http://localhost:8000/subscription/create-customer",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       email: email,
+    //       password: password,
+    //     }),
+    //   }
+    // );
+    const response = await Axios.post(
+      "http://localhost:8000/subscription/create-customer",
+      {
+        email: email,
+        password: password,
+      }
+    );
+    const data = await response.data;
+
+    console.log(data, "create customer");
+    // toast.success(data[0].message);
+    toast.success("Customer created successfully");
+
+    return data;
+  } catch (error) {
+    toast.error(error.response.data.data[0].msg || error.message);
     console.log(error);
   }
 };

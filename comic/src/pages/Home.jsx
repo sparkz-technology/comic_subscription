@@ -1,72 +1,73 @@
-import EmailForm from "../components/EmailForm";
-import { Container, BackgroundImage, StyledHome } from "../styles/Home";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { Logo } from "../ui/Logo";
+import { styled } from "styled-components";
+import Login from "../components/Login";
+import Register from "../components/Register";
+// import { useShow } from "../hooks/useShow";
+import { useState } from "react";
 
-function Home() {
+const Home = () => {
+  // const { show, toggleShow } = useShow();
+  // useEffect(() => {
+  //   console.log(show);
+  // }, [show, toggleShow]);
+  const [show, setShow] = useState(false);
+  const toggleShow = () => {
+    setShow(!show);
+  };
   return (
-    <Container>
-      <Navbar>
-        <div>
-          <Logo theme="dark" />
-          <h1>Comic World</h1>
-        </div>
-
-        <StyledLink to="/register">Register</StyledLink>
-      </Navbar>
+    <>
       <BackgroundImage />
-      <StyledHome>
-        <h1>Unlimited comics, stories, and more.</h1>
-        <h2>Enjoy what you like.</h2>
-        <p>Ready to read? Enter your email for a free trial.</p>
-        <EmailForm />
-      </StyledHome>
-    </Container>
+
+      <Header>
+        <q>
+          Unleash your inner superhero and embark on a thrilling adventure of
+          comics with our subscription – Join now to unlock a universe of
+          captivating stories!
+        </q>
+      </Header>
+      {show ? (
+        <Login toggleShow={toggleShow} />
+      ) : (
+        <Register toggleShow={toggleShow} />
+      )}
+    </>
   );
-}
+};
 
 export default Home;
-
-const Navbar = styled.div`
-  position: fixed;
+const BackgroundImage = styled.div`
+  background-image: url(https://as2.ftcdn.net/v2/jpg/05/84/02/69/1000_F_584026907_ksj4Rk4TVxWhVduqBsV5QMxr4MjNqqno.jpg);
+  /* position: absolute; */
   top: 0;
   left: 0;
-  right: 0;
-  height: 60px;
-  background-color: #ffffff21;
+  width: 100%;
+  height: 40vh;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.5);
 
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 20px;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-  h1 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #fff;
-  }
-  div {
-    display: flex;
-    align-items: center;
-  }
+  /* z-index: -1; */
 `;
-const StyledLink = styled(Link)`
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #0000007d;
-  transition: all 0.3s ease-in-out;
-  &:hover {
-    background-color: #fff;
-    color: #000;
+const Header = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 40vh;
+  q {
+    font-size: 3rem;
+    margin: 0;
+    font-size: 400;
+    font-family: var(--font-comic);
+    padding: 20px;
+    color: #fff;
+    text-align: center;
   }
-  &:active {
-    transform: scale(0.9);
+  @media (max-width: 768px) {
+    q {
+      font-size: 2rem;
+    }
   }
 `;

@@ -8,7 +8,8 @@ function Navbar() {
   function handleSignOut() {
     Cookies.remove("subscriptionId");
     Cookies.remove("customer");
-    navigate("/register");
+    Cookies.remove("token");
+    navigate("/home");
   }
   return (
     <StyledNavbar>
