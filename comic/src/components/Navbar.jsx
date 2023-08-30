@@ -38,7 +38,6 @@ const StyledNavbar = styled.div`
   border-bottom: 1px solid #ddd;
   box-sizing: border-box;
   z-index: 1;
-  // shadow effect
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   h1 {
     font-size: 1.5rem;
@@ -51,10 +50,6 @@ const StyledNavbar = styled.div`
     align-items: center;
   }
 `;
-
-// const Logo = styled.h1`
-//   margin: 0;
-// `;
 
 const SignOutButton = styled.button`
   background-color: #fff;

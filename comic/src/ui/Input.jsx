@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import { Field } from "formik";
 
@@ -14,7 +13,7 @@ export const Input = styled.input`
   border: 0px;
 
   &:focus {
-    border-color: #333;
+    border-color: var(--red-color);
   }
   @media (max-width: 768px) {
     width: 100%;
@@ -30,9 +29,9 @@ export const FieldInput = styled(Field)`
   outline: none;
   border: 0px;
   width: 100%;
-
+  border: 1px solid var(--border-color);
   &:focus {
-    border-color: #333;
+    border-color: var(--red-color);
   }
   @media (max-width: 768px) {
     width: 100%;

@@ -15,11 +15,14 @@ const GlobalStyles = createGlobalStyle`
         --red-color:#ec4f44;
         --red-color-hover:#d13f34;
         --blue-color:#4936f4;
+        --border-color:#ccc;
+        --pure-white-color:#fff;
         
         --font-primary: sans-serif;
         --font-comic: 'Comic Neue', cursive;
         --text-shadow:0px 0px 10px rgba(0,0,0,0.5);
         --box-shadow:0px 0px 10px rgba(0,0,0,0.5);
+
 
 
     }

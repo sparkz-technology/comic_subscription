@@ -29,3 +29,58 @@ export const ErrorMessage = styled.div`
   color: var(--red-color);
   font-weight: bold;
 `;
+// new code
+export const NavigationContainer = styled.div`
+  display: flex;
+  justify-content: right;
+  align-items: center;
+`;
+export const NavigateBtn = styled.button`
+  border: none;
+  background: none;
+  color: var(--blue-color);
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+  padding: 0px;
+  margin: 0;
+  text-decoration: underline;
+  transition: all 0.3s ease-in-out;
+`;
+export const Row = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+export const ErrorContainer = styled(ErrorMessage)`
+  margin: 1px 0px;
+  color: var(--red-color);
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  width: 100%;
+`;
+export const StyledForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 60vh;
+  background-color: var(--white-color);
+  h1 {
+    font-size: 2rem;
+    margin: 0;
+  }
+  p {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+`;
+export const FormContainer = styled.div`
+  width: 100%;
+  max-width: 500px;
+  padding: 0 20px;
+  box-sizing: border-box;
+`;

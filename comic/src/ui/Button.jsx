@@ -1,16 +1,5 @@
 import styled from "styled-components";
 
-const Variant = {
-  primary: {
-    backgroundColor: "#4936f4",
-    color: "#fff",
-  },
-  subscribe: {
-    backgroundColor: "#ec4f44",
-    color: "#fff",
-  },
-};
-
 export const Button = styled.button`
   height: 40px;
   width: ${(props) => (props.width ? props.width : "100%")};
@@ -23,7 +12,9 @@ export const Button = styled.button`
   font-family: var(--font-primary);
   font-weight: bold;
   cursor: pointer;
-  ${(props) => Variant[props.variant]}// Apply the appropriate variant styles
+  background-color: ${(props) =>
+    props.variant === "subscribe" ? "var(--red-color)" : "var(--blue-color)"};
+  color: var(--pure-white-color);
 `;
 
 Button.defaultProps = {

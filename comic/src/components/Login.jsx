@@ -3,13 +3,20 @@
 import * as Yup from "yup";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { Formik, Form } from "formik";
+
 import { RetrieveCustomer } from "../services/apiSubscription";
-import { Formik, Form, ErrorMessage } from "formik";
+import {
+  StyledForm,
+  FormContainer,
+  NavigationContainer,
+  NavigateBtn,
+  Row,
+  ErrorContainer,
+} from "../styles/Form";
 import { FieldInput } from "../ui/Input";
 import { Container, InputContainer } from "../styles/Form";
 import { Button } from "../ui/Button";
-import styled from "styled-components";
-// import { useShow } from "../hooks/useShow";
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().required("Password is required"),
@@ -29,12 +36,10 @@ function Login({ toggleShow }) {
       console.error("Error creating customer:", error);
     }
   }
-  // const { toggleShow } = useShow();
-
   return (
     <>
-      <StyledLogin>
-        <LoginContainer>
+      <StyledForm>
+        <FormContainer>
           <h1>Login</h1>
           <p>Unlimited comics, stories and more. Cancel anytime.</p>
           <Container>
@@ -77,66 +82,10 @@ function Login({ toggleShow }) {
               </Form>
             </Formik>
           </Container>
-        </LoginContainer>
-      </StyledLogin>
+        </FormContainer>
+      </StyledForm>
     </>
   );
 }
 
 export default Login;
-const NavigationContainer = styled.div`
-  display: flex;
-  justify-content: right;
-  align-items: center;
-`;
-const NavigateBtn = styled.button`
-  border: none;
-  background: none;
-  color: var(--blue-color);
-  font-size: 0.9rem;
-  font-weight: bold;
-  cursor: pointer;
-  outline: none;
-  padding: 0px;
-  margin: 0;
-  text-decoration: underline;
-  transition: all 0.3s ease-in-out;
-
-  /* width: 100%; */
-`;
-const Row = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const ErrorContainer = styled(ErrorMessage)`
-  margin: 1px 0px;
-  color: var(--red-color);
-  font-size: 0.9rem;
-  box-sizing: border-box;
-  width: 100%;
-`;
-const StyledLogin = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 60vh;
-  background-color: var(--white-color);
-  h1 {
-    font-size: 2rem;
-    margin: 0;
-  }
-  p {
-    font-size: 1.5rem;
-    margin: 0;
-  }
-`;
-const LoginContainer = styled.div`
-  width: 100%;
-  max-width: 500px;
-  padding: 0 20px;
-  box-sizing: border-box;
-`;
