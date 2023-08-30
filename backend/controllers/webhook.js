@@ -60,7 +60,7 @@ exports.webhook = async (request, response) => {
         });
         userDeleted.subscriptionStatus = subscriptionDeleted.status;
         await userDeleted.save();
-        await subscription("cancelSubscription", userDeleted);
+        // await subscription("cancelSubscription", userDeleted);
       } catch (err) {
         console.log(err, "customer.subscription.deleted");
       }
@@ -113,6 +113,19 @@ exports.webhook = async (request, response) => {
       }
       // Then define and call a function to handle the event payment_intent.succeeded
       break;
+    case "invoice.payment_failed":
+      try {
+        const invoicePaymentFailed = event.data.object;
+        const userInvoicePaymentFailed = await User.findOne({
+          customerId: invoicePaymentFailed.customer,
+        });
+        userInvoicePaymentFailed.subscriptionStatus =
+          invoicePaymentFailed.status;
+        await userInvoicePaymentFailed.save();
+        await subscription("cancelSubscription", userInvoicePaymentFailed);
+      } catch (err) {
+        console.log(err, "invoice.payment_failed");
+      }
 
     default:
       console.log(`Unhandled event type ${event.type}`);

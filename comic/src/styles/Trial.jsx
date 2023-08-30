@@ -77,7 +77,7 @@ export const Navbar = styled.div`
   h1 {
     font-size: 24px;
     font-weight: 600;
-    color: var(-pure-white-color);
+    color: var(--pure-white-color);
   }
   div {
     display: flex;
@@ -87,14 +87,14 @@ export const Navbar = styled.div`
 export const StyledLink = styled(Link)`
   font-size: 16px;
   font-weight: 600;
-  color: var(-pure-white-color);
+  color: var(--pure-white-color);
   text-decoration: none;
   padding: 10px 20px;
   border-radius: 5px;
   background-color: #0000007d;
   transition: all 0.3s ease-in-out;
   &:hover {
-    background-color: var(-pure-white-color);
+    background-color: var(--pure-white-color);
     color: #000;
   }
   &:active {
