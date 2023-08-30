@@ -23,10 +23,14 @@ async function subscriber(consume) {
   }
 }
 
-async function deleteSubscribers() {
+async function deleteSubscriber(email) {
   try {
-    await User.deleteMany({});
-    console.log("Deleted all subscribers");
+    if (!email) {
+      console.log("No email provided");
+      return;
+    }
+    await User.deleteOne({ email });
+    console.log(`Deleted ${email} from database`);
   } catch (error) {
     console.log(error);
   }
@@ -34,5 +38,5 @@ async function deleteSubscribers() {
 
 module.exports = {
   subscriber,
-  deleteSubscribers,
+  deleteSubscriber,
 };

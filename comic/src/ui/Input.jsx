@@ -13,7 +13,7 @@ export const Input = styled.input`
   border: 0px;
 
   &:focus {
-    border-color: var(--red-color);
+    border-color: var(--blue-color);
   }
   @media (max-width: 768px) {
     width: 100%;
@@ -31,7 +31,7 @@ export const FieldInput = styled(Field)`
   width: 100%;
   border: 1px solid var(--border-color);
   &:focus {
-    border-color: var(--red-color);
+    border-color: var(--blue-color);
   }
   @media (max-width: 768px) {
     width: 100%;

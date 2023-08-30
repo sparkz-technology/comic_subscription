@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const schedule = require("node-schedule");
 
 const { subscriber } = require("./controllers/user");
-const { deleteSubscribers } = require("./controllers/user");
+const { deleteSubscriber } = require("./controllers/user");
 const config = require("./config/config");
 const {
   sendMail,
@@ -41,7 +41,7 @@ async function connect(queue) {
         console.log(`Received message: ${message.content.toString()}`);
         const consume = JSON.parse(message.content.toString());
         console.log(`Received message: ${consume} from ${queue}`);
-        await sendCancelMail(consume);
+        await cancelSubscription(consume);
         channel.ack(message);
       }
     });
@@ -56,8 +56,19 @@ schedule.scheduleJob("59 23 * * 0", async () => {
   await sendMail();
   console.log("End of the week (Sunday) task executed!");
 });
+
+async function cancelSubscription(consume) {
+  try {
+    const { email } = consume;
+    console.log(`Email: ${email}`);
+    await deleteSubscriber(email);
+    await sendCancelMail(consume);
+  } catch (error) {
+    console.log(error);
+  }
+}
 // Schedule for the last day of the month
-schedule.scheduleJob("59 23 28-31 * *", async () => {
-  console.log("Last day of the month task executed!");
-  await deleteSubscribers();
-});
+// schedule.scheduleJob("59 23 28-31 * *", async () => {
+//   console.log("Last day of the month task executed!");
+//   await deleteSubscribers();
+// });

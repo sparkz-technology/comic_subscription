@@ -103,11 +103,14 @@ const ErrorContainer = styled(ErrorMessage)`
   font-weight: bold;
 `;
 const StyledForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   input {
     margin-bottom: 10px;
     border-radius: 5px;
     padding: 0 20px;
-    margin-right: 10px;
     height: 40px;
     width: 100%;
     min-width: 400px;

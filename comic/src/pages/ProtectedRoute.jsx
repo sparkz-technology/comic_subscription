@@ -6,8 +6,6 @@ import Cookies from "js-cookie";
 function ProtectedRoute({ children }) {
   const navigate = useNavigate();
 
-  // Store the isAuthenticated status in a cookie
-  // if authenticated, navigate to the lost used page on refresh
   const isAuthenticated = Cookies.get("customer");
 
   useEffect(() => {
