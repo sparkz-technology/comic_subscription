@@ -14,7 +14,7 @@ async function connect() {
   try {
     const connection = await ampq.connect("amqp://127.0.0.1:5672");
     const channel = await connection.createChannel();
-    console.log("Connected to RabbitMQ");
+    console.log("Connected to RabbitMQ in trial microservice");
     const queue = "trial";
     await channel.purgeQueue(queue);
     await channel.assertQueue(queue, { durable: false });

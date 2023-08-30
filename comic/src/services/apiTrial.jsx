@@ -1,7 +1,10 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-const API_URL = "http://localhost:8000/api";
+import config from "../config";
+
+const API_URL = `${config.API_URL}/trial`;
+
 export const apiTrial = async (email) => {
   try {
     const response = await axios.post(API_URL + "/user", {

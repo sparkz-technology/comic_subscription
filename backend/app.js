@@ -28,7 +28,7 @@ const errorHandler = require("./middlewares/error"); // error handler middleware
 
 app.use("/webhook", express.raw({ type: "application/json" }), webhookRoutes); // webhook routes (Stripe
 app.use(bodyParser.json()); // parse application/json
-app.use("/api", userRoutes); // user routes
+app.use("/trial", userRoutes); // user routes
 app.use("/subscription", subscriptionRoutes); // subscription routes
 app.use(errorHandler); // error handler middleware
 

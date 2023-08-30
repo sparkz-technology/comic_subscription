@@ -2,142 +2,101 @@ import { toast } from "react-hot-toast";
 import Axios from "axios";
 import Cookies from "js-cookie";
 
-export const SubscriptionCancel = async (subscriptionId) => {
-  console.log(subscriptionId);
+import config from "../config";
 
-  try {
-    const response = await fetch(
-      "http://localhost:8000/subscription/cancel-subscription",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ subscriptionId }),
-      }
-    );
-    const data = await response.json();
-    console.log(data, "cancel subscription");
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+const priceId = config.PRICE_ID;
+const API_URL = `${config.API_URL}/subscription`;
 
-export const GetSubscription = async () => {
+// register customer with stripe
+export const CreateCustomer = async (email, password) => {
   try {
-    const response = await fetch(
-      "http://localhost:8000/subscription/get-subscription",
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-      }
-    );
-    const data = await response.json();
+    const response = await Axios.post(`${API_URL}/create-customer`, {
+      email: email,
+      password: password,
+    });
+    const data = await response.data;
+    toast.success("Customer created successfully");
     return data;
   } catch (error) {
-    console.log(error);
+    toast.error(error.response.data.data[0].msg || error.message);
   }
 };
-const priceId = "price_1NiuaMSGCEU7P6TIP17bP56L";
-export const CreateSubscription = async () => {
-  try {
-    const response = await fetch(
-      "http://localhost:8000/subscription/create-subscription",
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-        body: JSON.stringify({
-          priceId,
-        }),
-      }
-    );
-    const data = await response.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// login customer with stripe
 export const RetrieveCustomer = async (email, password) => {
   try {
-    const response = await Axios.post(
-      "http://localhost:8000/subscription/retrieve-customer",
-      {
-        email: email,
-        password: password,
-      }
-    );
+    const response = await Axios.post(`${API_URL}/retrieve-customer`, {
+      email: email,
+      password: password,
+    });
     const data = await response.data;
 
     toast.success("Customer login successfully");
     return data;
   } catch (error) {
     toast.error(error.response.data.message || error.message);
-    // toast.error(
-    //   error.response.data.data[0].msg ||
-    //     error.message ||
-    //     error.response.data.message
-    // );
   }
 };
-export const CreateCustomer = async (email, password) => {
+// create subscription with stripe
+export const CreateSubscription = async () => {
   try {
-    // const response = await fetch(
-    //   "http://localhost:8000/subscription/create-customer",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       email: email,
-    //       password: password,
-    //     }),
-    //   }
-    // );
     const response = await Axios.post(
-      "http://localhost:8000/subscription/create-customer",
+      `${API_URL}/create-subscription`,
       {
-        email: email,
-        password: password,
-      }
-    );
-    const data = await response.data;
-
-    console.log(data, "create customer");
-    // toast.success(data[0].message);
-    toast.success("Customer created successfully");
-
-    return data;
-  } catch (error) {
-    toast.error(error.response.data.data[0].msg || error.message);
-    console.log(error);
-  }
-};
-export const GetSubscriptionDetails = async () => {
-  try {
-    const response = await fetch(
-      "http://localhost:8000/subscription/get-subscription-details",
+        priceId,
+      },
       {
-        method: "GET",
-        credentials: "include",
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
+        withCredentials: true, // Include cookies in the request
       }
     );
-    const data = await response.json();
+    const data = await response.data;
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
+  }
+};
+// cancel subscription with stripe
+export const SubscriptionCancel = async (subscriptionId) => {
+  console.log(subscriptionId);
+
+  try {
+    const response = await Axios.post(
+      `${API_URL}/cancel-subscription`,
+      {
+        subscriptionId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        withCredentials: true, // Include cookies in the request
+      }
+    );
+    const data = await response.data;
+    console.log(data, "cancel subscription");
+    toast.success("Subscription cancelled successfully");
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+// get subscription details with stripe
+export const GetSubscriptionDetails = async () => {
+  try {
+    const response = await Axios.get(`${API_URL}/get-subscription-details`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      withCredentials: true,
+    });
+    const data = await response.data;
+
+    return data;
+  } catch (error) {
+    console.error(error);
   }
 };

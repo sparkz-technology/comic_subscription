@@ -39,7 +39,7 @@ function Login({ toggleShow }) {
           <p>Unlimited comics, stories and more. Cancel anytime.</p>
           <Container>
             <Formik
-              initialValues={{ email: "", password: "" }}
+              initialValues={{ email: "test@test.com", password: "Sparkz@07" }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >

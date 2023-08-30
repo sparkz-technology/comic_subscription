@@ -10,9 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Trial from "./pages/Trial";
 import Home from "./pages/Home";
-const stripePromise = loadStripe(
-  "pk_test_51Nd9n5SGCEU7P6TIZ5bjqcl4OzWz5rt9ToV1RVFeEB8vdXBBCFB0grO7YgpSd5igNEUi3YiNH66kdvJ5x2vcLeqW00OLHo4Okn"
-);
+import config from "./config";
+const stripePromise = loadStripe(config.STRIPE_PUBLIC_KEY);
 
 const router = createBrowserRouter([
   { path: "/", element: <Trial /> },

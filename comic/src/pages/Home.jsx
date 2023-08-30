@@ -1,15 +1,10 @@
 import { styled } from "styled-components";
 import Login from "../components/Login";
 import Register from "../components/Register";
-// import { useShow } from "../hooks/useShow";
 import { useState } from "react";
 
 const Home = () => {
-  // const { show, toggleShow } = useShow();
-  // useEffect(() => {
-  //   console.log(show);
-  // }, [show, toggleShow]);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const toggleShow = () => {
     setShow(!show);
   };
