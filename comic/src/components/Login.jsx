@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
+import { useState } from "react";
 
 import { RetrieveCustomer } from "../services/apiSubscription";
 import {
@@ -13,6 +14,10 @@ import {
   NavigateBtn,
   Row,
   ErrorContainer,
+  ToggleContainer,
+  ToggleButton,
+  VisibleIcon,
+  InvisibleIcon,
 } from "../styles/Form";
 import { FieldInput } from "../ui/Input";
 import { Container, InputContainer } from "../styles/Form";
@@ -36,6 +41,11 @@ function Login({ toggleShow }) {
       console.error("Error creating customer:", error);
     }
   }
+  const [isVisible, setIsVisible] = useState(true);
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
   return (
     <>
       <StyledForm>
@@ -60,12 +70,20 @@ function Login({ toggleShow }) {
                     <ErrorContainer name="email" component="div" />
                   </Row>
                   <Row>
-                    <FieldInput
-                      type="password"
-                      id="password"
-                      name="password"
-                      placeholder="password"
-                    />
+                    <ToggleContainer>
+                      <FieldInput
+                        type={isVisible ? "password" : "text"}
+                        id="password"
+                        name="password"
+                        placeholder="password"
+                      />
+                      <ToggleButton
+                        type="button"
+                        onClick={() => toggleVisibility()}
+                      >
+                        {isVisible ? <InvisibleIcon /> : <VisibleIcon />}
+                      </ToggleButton>
+                    </ToggleContainer>
                     <ErrorContainer name="password" component="div" />
                   </Row>
                   <NavigationContainer>

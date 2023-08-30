@@ -13,9 +13,14 @@ import {
   NavigateBtn,
   Row,
   ErrorContainer,
+  ToggleContainer,
+  ToggleButton,
+  VisibleIcon,
+  InvisibleIcon,
 } from "../styles/Form";
 import Button from "../ui/Button";
 import { FieldInput } from "../ui/Input";
+import { useState } from "react";
 
 const Register = ({ toggleShow }) => {
   const handleSubmit = async (values) => {
@@ -50,6 +55,11 @@ const Register = ({ toggleShow }) => {
       )
       .min(8, "Password must be at least 8 characters"),
   });
+  const [isVisible, setIsVisible] = useState(true);
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
 
   return (
     <>
@@ -75,12 +85,20 @@ const Register = ({ toggleShow }) => {
                     <ErrorContainer name="email" component="div" />
                   </Row>
                   <Row>
-                    <FieldInput
-                      type="password"
-                      id="password"
-                      name="password"
-                      placeholder="password"
-                    />
+                    <ToggleContainer>
+                      <FieldInput
+                        type={isVisible ? "password" : "text"}
+                        id="password"
+                        name="password"
+                        placeholder="password"
+                      />
+                      <ToggleButton
+                        type="button"
+                        onClick={() => toggleVisibility()}
+                      >
+                        {isVisible ? <InvisibleIcon /> : <VisibleIcon />}
+                      </ToggleButton>
+                    </ToggleContainer>
                     <ErrorContainer name="password" component="div" />
                   </Row>
                   <NavigationContainer>

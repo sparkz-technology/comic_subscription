@@ -18,6 +18,8 @@ const GlobalStyles = createGlobalStyle`
         --border-color:#ccc;
         --pure-white-color:#fff;
         
+        --color-grey:#b9bbbe;
+        
         --font-primary: sans-serif;
         --font-comic: 'Comic Neue', cursive;
         --text-shadow:0px 0px 10px rgba(0,0,0,0.5);

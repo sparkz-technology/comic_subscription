@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export const Container = styled.div`
   margin-top: 20px;
@@ -83,4 +84,26 @@ export const FormContainer = styled.div`
   max-width: 500px;
   padding: 0 20px;
   box-sizing: border-box;
+`;
+export const ToggleButton = styled.button`
+  right: 0;
+  top: 20%;
+  left: 90%;
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
+export const VisibleIcon = styled(AiOutlineEye)`
+  height: 1.5rem;
+  width: 1.5rem;
+  color: var(--color-grey);
+`;
+export const InvisibleIcon = styled(AiOutlineEyeInvisible)`
+  height: 1.5rem;
+  width: 1.5rem;
+  color: var(--color-grey);
+`;
+export const ToggleContainer = styled.div`
+  position: relative;
 `;
