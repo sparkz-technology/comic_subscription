@@ -1,13 +1,12 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const util = require("util");
 const path = require("path");
 const User = require("../models/user");
 const TrialUser = require("../models/trialUser");
 
 const config = require("../config/config");
 // Read the template file
-const readFile = util.promisify(fs.readFile);
+const readFile = fs.promises.readFile;
 // path to the template
 const attachmentPath = path.join(__dirname, "../templates/comic.pdf");
 const trailAttachmentPath = path.join(__dirname, "../templates/trialComic.pdf");
