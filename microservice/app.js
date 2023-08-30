@@ -36,33 +36,24 @@ async function connect(queue) {
   try {
     const connection = await ampq.connect("amqp://localhost");
     const channel = await connection.createChannel();
-    // const queue = "subscription";
     await channel.purgeQueue(queue);
     await channel.assertQueue(queue, { durable: false });
     channel.consume(queue, async (message) => {
+      const consume = JSON.parse(message.content.toString());
+      console.log(`Received message: ${message.content.toString()}`);
+      console.log(`Received message: ${consume}`);
       if (queue === "subscription") {
-        console.log(`Received message: ${message.content.toString()}`);
-        const consume = JSON.parse(message.content.toString());
-        console.log(`Received message: ${consume}`);
         await subscriber(consume);
         await sendConfirmationMail(consume);
-        channel.ack(message);
-      }
-      if (queue === "cancelSubscription") {
-        console.log(`Received message: ${message.content.toString()}`);
-        const consume = JSON.parse(message.content.toString());
+      } else if (queue === "cancelSubscription") {
         console.log(`Received message: ${consume} from ${queue}`);
         await cancelSubscription(consume);
-        channel.ack(message);
-      }
-      if (queue === "trialSubscription") {
-        console.log(`Received message: ${message.content.toString()}`);
-        const consume = JSON.parse(message.content.toString());
+      } else if (queue === "trialSubscription") {
         console.log(`Received message: ${consume} from ${queue}`);
         console.log(consume.email);
         await trialSubscriber(consume);
-        channel.ack(message);
       }
+      channel.ack(message);
     });
   } catch (error) {
     console.log(error);
@@ -86,6 +77,13 @@ async function cancelSubscription(consume) {
     console.log(error);
   }
 }
+//Schedule for trial Subscription in the end of the day
+schedule.scheduleJob("0 0 0 * * *", async () => {
+  // schedule.scheduleJob("*/40 * * * * *", async () => {
+  await sendTrialMail();
+
+  await deleteTrialSubscribers();
+});
 //Schedule for trial Subscription in the end of the day
 schedule.scheduleJob("0 0 0 * * *", async () => {
   // schedule.scheduleJob("*/40 * * * * *", async () => {

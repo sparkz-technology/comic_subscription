@@ -158,10 +158,10 @@ exports.getSubscriptionDetails = async (req, res, next) => {
   // Stripe Customer ID related to the authenticated user.
   const customerId = req.cookies["customer"];
   console.log(customerId);
-  if (!customerId) {
-    return res.status(400).send({ error: { message: "No customer found" } });
-  }
   try {
+    if (!customerId) {
+      return res.status(400).send({ error: { message: "No customer found" } });
+    }
     const customer = await stripe.customers.retrieve(customerId, {
       expand: ["subscriptions"],
     });
