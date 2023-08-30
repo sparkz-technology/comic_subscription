@@ -9,16 +9,27 @@ const {
   sendMail,
   sendConfirmationMail,
   sendCancelMail,
+  sendTrialMail,
 } = require("./services/mail");
+
+const {
+  trialSubscriber,
+  deleteTrialSubscribers,
+} = require("./controllers/trialUser");
 
 mongoose.connect(config.mongo_url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 async function connectQuery() {
-  await connect("cancelSubscription");
-  await connect("subscription");
-  console.log(`Connected to RabbitMQ in Subscription Microservice!`);
+  try {
+    await connect("cancelSubscription");
+    await connect("subscription");
+    await connect("trialSubscription");
+    console.log(`Connected to RabbitMQ in Microservice!`);
+  } catch (err) {
+    console.error("Error connecting to RabbitMQ in Microservice!");
+  }
 }
 connectQuery();
 async function connect(queue) {
@@ -44,6 +55,14 @@ async function connect(queue) {
         await cancelSubscription(consume);
         channel.ack(message);
       }
+      if (queue === "trialSubscription") {
+        console.log(`Received message: ${message.content.toString()}`);
+        const consume = JSON.parse(message.content.toString());
+        console.log(`Received message: ${consume} from ${queue}`);
+        console.log(consume.email);
+        await trialSubscriber(consume);
+        channel.ack(message);
+      }
     });
   } catch (error) {
     console.log(error);
@@ -67,8 +86,10 @@ async function cancelSubscription(consume) {
     console.log(error);
   }
 }
-// Schedule for the last day of the month
-// schedule.scheduleJob("59 23 28-31 * *", async () => {
-//   console.log("Last day of the month task executed!");
-//   await deleteSubscribers();
-// });
+//Schedule for trial Subscription in the end of the day
+schedule.scheduleJob("0 0 0 * * *", async () => {
+  // schedule.scheduleJob("*/40 * * * * *", async () => {
+  await sendTrialMail();
+
+  await deleteTrialSubscribers();
+});

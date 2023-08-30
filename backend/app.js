@@ -21,14 +21,14 @@ if (config.env === "development") {
   app.use(morgan("dev"));
 }
 
-const userRoutes = require("./routes/user"); // user routes
+const trialUserRoutes = require("./routes/trialUser"); // user routes
 const subscriptionRoutes = require("./routes/subscription"); // subscription routes
 const webhookRoutes = require("./routes/webhook"); // webhook routes (Stripe)
 const errorHandler = require("./middlewares/error"); // error handler middleware
 
 app.use("/webhook", express.raw({ type: "application/json" }), webhookRoutes); // webhook routes (Stripe
 app.use(bodyParser.json()); // parse application/json
-app.use("/trial", userRoutes); // user routes
+app.use("/trial", trialUserRoutes); // user routes
 app.use("/subscription", subscriptionRoutes); // subscription routes
 app.use(errorHandler); // error handler middleware
 
