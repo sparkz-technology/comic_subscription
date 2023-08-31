@@ -1,4 +1,4 @@
-const ampq = require("amqplib");
+const ampq = require("amqplib"); // advanced message queuing protocol library
 const mongoose = require("mongoose");
 const schedule = require("node-schedule");
 
@@ -34,17 +34,16 @@ async function connectQuery() {
 connectQuery();
 async function connect(queue) {
   try {
-    const connection = await ampq.connect("amqp://localhost");
-    const channel = await connection.createChannel();
-    await channel.purgeQueue(queue);
+    const connection = await ampq.connect("amqp://localhost"); //connect to rabbitmq server
+    const channel = await connection.createChannel(); //create channel
+    await channel.purgeQueue(queue); //Purges the specified queue to remove any existing messages (for testing purposes).
     await channel.assertQueue(queue, { durable: false });
     channel.consume(queue, async (message) => {
       const consume = JSON.parse(message.content.toString());
       console.log(`Received message: ${message.content.toString()}`);
       console.log(`Received message: ${consume}`);
       if (queue === "subscription") {
-        await subscriber(consume);
-        await sendConfirmationMail(consume);
+        await Promise.all([subscriber(consume), sendConfirmationMail(consume)]);
       } else if (queue === "cancelSubscription") {
         console.log(`Received message: ${consume} from ${queue}`);
         await cancelSubscription(consume);
@@ -80,14 +79,12 @@ async function cancelSubscription(consume) {
 //Schedule for trial Subscription in the end of the day
 schedule.scheduleJob("0 0 0 * * *", async () => {
   // schedule.scheduleJob("*/40 * * * * *", async () => {
-  await sendTrialMail();
-
-  await deleteTrialSubscribers();
-});
-//Schedule for trial Subscription in the end of the day
-schedule.scheduleJob("0 0 0 * * *", async () => {
-  // schedule.scheduleJob("*/40 * * * * *", async () => {
-  await sendTrialMail();
-
-  await deleteTrialSubscribers();
+  const result = await sendTrialMail();
+  if (result === "No trial users found!") {
+    console.log("No trial users found!");
+  }
+  if (result === false) {
+    console.log("Error sending trial mail!");
+  }
+  if (result === true) await deleteTrialSubscribers();
 });

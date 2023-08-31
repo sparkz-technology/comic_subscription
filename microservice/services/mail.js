@@ -154,6 +154,10 @@ async function sendTrialMail() {
   try {
     const templatePath = path.join(__dirname, "../templates/trial.html");
     const trialUsers = await TrialUser.find({});
+    if (trialUsers.length === 0) {
+      return "No trial users found!";
+    }
+    let isSuccess = true;
     const emailPromises = trialUsers.map(async (trialUser) => {
       // Read the email template
       const template = await readFile(templatePath, "utf-8");
@@ -184,15 +188,15 @@ async function sendTrialMail() {
         const info = await transporter.sendMail(mailOptions);
         return `Email sent to ${trialUser.email}: ${info.response}`;
       } catch (error) {
+        isSuccess = false;
         return `Error sending email to ${trialUser.email}: ${error}`;
       }
     });
-    const results = await Promise.all(emailPromises);
-    results.forEach((result) => {
-      console.log(result);
-    });
+    await Promise.all(emailPromises);
+    return isSuccess;
   } catch (err) {
     console.log(err);
+    return false;
   }
 }
 
