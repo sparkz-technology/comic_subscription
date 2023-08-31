@@ -1,11 +1,9 @@
 const amqp = require("amqplib");
-
 async function subscription(queue, user) {
   try {
     const connection = await amqp.connect("amqp://localhost");
     const channel = await connection.createChannel();
-    // const queue = "subscription";
-    await channel.assertQueue(queue, { durable: false });
+    await channel.assertQueue(queue, { durable: false }); //durable: false, the queue will be deleted once the connection is closed.
     channel.sendToQueue(queue, Buffer.from(JSON.stringify(user)));
     console.log(`Message sent to ${queue}`);
     console.log(user);

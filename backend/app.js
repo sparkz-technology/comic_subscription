@@ -7,11 +7,11 @@ const bodyParser = require("body-parser");
 const config = require("./config/config");
 
 // Configure CORS middleware
-const stripeWebhookOrigin = "https://hooks.stripe.com"; // Stripe's origin for webhook requests
-
+const stripeWebhookOrigin = config.stripe_webhook_orgin; // Stripe's origin for webhook requests
+const origin = config.origin; // Frontend's origin
 app.use(
   cors({
-    origin: ["http://localhost:5173", stripeWebhookOrigin],
+    origin: [origin, stripeWebhookOrigin],
     credentials: true,
   })
 );

@@ -54,25 +54,9 @@ exports.postRetrieveCustomer = async (req, res, next) => {
         userId: loadedUser._id.toString(),
       },
       config.jwt_secret,
-      { expiresIn: "24h" }
+      { expiresIn: config.jwt_expires_in }
     );
 
-    // if (!loadedUser) {
-    //   // Create a new customer in Stripe
-    //   const customer = await stripe.customers.create({ email: req.body.email });
-
-    //   // Save the new user with the Stripe customer ID
-    //   const user = new User({
-    //     email: req.body.email,
-    //     customerId: customer.id,
-    //   });
-    //   await user.save();
-
-    //   // Set a cookie and send the response
-    //   res.cookie("customer", customer.id, { maxAge: 900000, httpOnly: true });
-    //   res.status(201).send({ customer: customer, message: "User created" });
-    // } else {
-    // Retrieve the customer using the stored customer ID
     const customer = await stripe.customers.retrieve(loadedUser.customerId);
     if (!customer) {
       const error = new Error("No customer found");
@@ -109,8 +93,6 @@ exports.postSubscription = async (req, res, next) => {
       const error = new Error("No customer found");
       error.statusCode = 400;
       throw error;
-
-      // return res.status(400).send({ error: { message: "No customer found" } });
     }
 
     const loadedUser = await User.findOne({ customerId: customerId });
@@ -119,9 +101,6 @@ exports.postSubscription = async (req, res, next) => {
       const error = new Error("You already have an active subscription");
       error.statusCode = 400;
       throw error;
-      // return res.status(400).send({
-      //   error: { message: "You already have an active subscription" },
-      // });
     }
 
     try {
@@ -186,9 +165,6 @@ exports.postCancelSubscription = async (req, res, next) => {
     const canceledSubscription = await stripe.subscriptions.cancel(
       subscriptionId
     );
-    // const updateUser = await User.findOne({ subscriptionId: subscriptionId });
-    // updateUser.subscriptionStatus = canceledSubscription.status;
-    // await updateUser.save();
     console.warn("testing purpose");
     console.log(canceledSubscription, "canceledSubscription");
     res.status(200).send({ canceledSubscription });
@@ -199,19 +175,3 @@ exports.postCancelSubscription = async (req, res, next) => {
     next(err);
   }
 };
-
-// exports.getSubscriptionDetails = async (req, res, next) => {
-//   const customerId = req.cookies["customer"];
-//   try {
-//     const user = await User.findOne({ customerId: customerId });
-//     if (!user) {
-//       return res.status(400).send({ error: { message: "No user found" } });
-//     }
-//     res.status(200).send({ user });
-//   } catch (err) {
-//     if (!err.statusCode) {
-//       err.statusCode = 500;
-//     }
-//     next(err);
-//   }
-// };

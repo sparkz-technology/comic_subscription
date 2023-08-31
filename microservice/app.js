@@ -77,14 +77,21 @@ async function cancelSubscription(consume) {
   }
 }
 //Schedule for trial Subscription in the end of the day
+// schedule.scheduleJob("*/40 * * * * *", async () => {
 schedule.scheduleJob("0 0 0 * * *", async () => {
-  // schedule.scheduleJob("*/40 * * * * *", async () => {
   const result = await sendTrialMail();
-  if (result === "No trial users found!") {
-    console.log("No trial users found!");
+
+  switch (result) {
+    case "No trial users found!":
+      console.log("No trial users found!");
+      break;
+    case false:
+      console.log("Error sending trial mail!");
+      break;
+    case true:
+      await deleteTrialSubscribers();
+      break;
+    default:
+      break;
   }
-  if (result === false) {
-    console.log("Error sending trial mail!");
-  }
-  if (result === true) await deleteTrialSubscribers();
 });
