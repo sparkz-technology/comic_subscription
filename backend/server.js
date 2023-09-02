@@ -10,7 +10,8 @@ async function connect() {
     });
 
     app.listen(config.port, () => {
-      console.log("Server is running on port", config.port);
+      console.log("http://localhost:" + config.port);
+      console.log("MongoDB is running on port", config.mongo_url);
     });
   } catch (err) {
     console.error("Error connecting to MongoDB:", err);

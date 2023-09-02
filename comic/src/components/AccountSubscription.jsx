@@ -49,15 +49,19 @@ function AccountSubscription() {
       {subscriptionsDetails.latestSubscription?.id ? (
         <div>
           <p>
-            Customer ID: {subscriptionsDetails.latestSubscription?.customer}
+            <strong> Customer ID: </strong>
+            {subscriptionsDetails.latestSubscription?.customer}
           </p>
-          <p>Subscription ID: {subscriptionsDetails.latestSubscription?.id}</p>
           <p>
-            Subscription Status:
+            <strong>Subscription ID: </strong>
+            {subscriptionsDetails.latestSubscription?.id}
+          </p>
+          <p>
+            <strong> Subscription Status: </strong>
             {subscriptionsDetails?.latestSubscription?.status}
           </p>
           <p>
-            Current period end:
+            <strong> Current period end: </strong>
             {new Date(
               subscriptionsDetails.latestSubscription?.current_period_end * 1000
             ).toString()}
@@ -79,14 +83,31 @@ const StyledAccountSubscription = styled.div`
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 20px;
+  box-sizing: border-box;
   h1 {
     font-size: 22px;
+    margin: 0 0 20px;
+  }
+  strong {
+    font-family: "Roboto Mono", monospace;
   }
   button {
-    background-color: #fff;
-    border: none;
+    border: 1px solid #900c3f;
+    background-color: #c70039;
+    border-radius: 4px;
+    color: #fff;
     cursor: pointer;
     font-size: 16px;
-    font-weight: 700;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    &:hover {
+      border: 1px solid#c70039;
+      background-color: #900c3f;
+    }
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    border: none;
   }
 `;

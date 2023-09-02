@@ -26,7 +26,9 @@ export const InputContainer = styled.div`
 `;
 
 export const ErrorMessage = styled.div`
-  margin-top: 8px;
+  font-size: 0.9rem;
+  margin: 8px 0px;
+
   color: var(--red-color);
   font-weight: bold;
 `;

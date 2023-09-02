@@ -9,8 +9,13 @@ const config = require("./config/config");
 // Configure CORS middleware
 const stripeWebhookOrigin = config.stripe_webhook_orgin; // Stripe's origin for webhook requests
 const origin = config.origin; // Frontend's origin
+// set origin to * to allow all origins
+// const origin = "*";
 app.use(
   cors({
+    // origin: "*",
+    // origin: [stripeWebhookOrigin],
+
     origin: [origin, stripeWebhookOrigin],
     credentials: true,
   })

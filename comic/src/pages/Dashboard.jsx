@@ -25,6 +25,10 @@ function Dashboard() {
       dispatch(setSubscriptionData({ subscriptionId, clientSecret }));
       Cookies.set("subscriptionId", subscriptionId);
       dispatch(setShowSubscribe(true));
+      // in mobile view, when user clicks on select button, it will scroll to bottom of the page
+      if (window.innerWidth < 768) {
+        window.scrollTo(0, document.body.scrollHeight);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -95,7 +99,17 @@ const StyledPlan = styled.div`
   width: 40%;
   height: 100vh;
   box-sizing: border-box;
-  background-color: var(--white-color);
+  color: var(--white-color);
+  /* background-color: var(--white-color);
+   */
+  background-color: #040d12;
+  h3 {
+    font-family: "Delicious Handrawn", cursive;
+    font-weight: 400;
+    font-size: 2rem;
+    text-align: center;
+    margin: 0;
+  }
   p {
     font-size: 1.5rem;
     font-family: sans-serif;
@@ -112,6 +126,9 @@ const StyledPlan = styled.div`
   }
   @media (max-width: 768px) {
     width: 100%;
+    height: 100%;
+    padding: 50px;
+    margin-top: 40px;
   }
 `;
 const StyledAccount = styled.div`
@@ -121,8 +138,10 @@ const StyledAccount = styled.div`
   justify-content: center;
   gap: 20px;
   width: 60%;
+  height: 100vh;
   @media (max-width: 768px) {
     width: 100%;
+    height: 100%;
     margin: 20px;
     margin-bottom: 40px;
   }
@@ -133,22 +152,44 @@ const Card = styled.div`
   width: 100%;
   max-width: 250px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 20px;
+  padding: 20px;
+  box-shadow: 0 0 10px #ccc;
+  /* background-color: #fff; */
+  background-color: #0b1a24;
+  transition: all 0.5s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #ccc;
+    cursor: pointer;
+  }
 
-  div {
+  //first div
+  div:first-child {
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
     gap: 20px;
-    background-color: var(--white-color);
-    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
+    width: 100%;
+    /* color: var(--red-color); */
+    /* background-color: var(--white-color); */
   }
   //last div
   div:last-child {
     padding: 20px;
     display: flex;
+    gap: 20px;
+    flex-direction: column;
     align-items: center;
-    background-color: #fff;
+    box-sizing: border-box;
+    /* background-color: #fff; */
   }
   strong {
     font-size: 2rem;
@@ -163,11 +204,16 @@ const Card = styled.div`
   button {
     padding: 10px 20px;
     border-radius: 5px;
-    border: 1px solid var(--red-color);
-    background-color: var(--white-color);
-    color: var(--red-color);
+    border: 1px solid #900c3f;
+    background-color: #c70039;
+    color: #fff;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    &:hover {
+      background-color: #900c3f;
+      border: 1px solid #c70039;
+    }
   }
 `;

@@ -94,7 +94,7 @@ const StyledCardElement = styled(CardElement)`
   max-width: 450px;
   box-sizing: border-box;
   @media (max-width: 768px) {
-    width: 90%;
+    width: 100%;
     padding: 10px;
   }
 `;
@@ -106,7 +106,6 @@ const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
   align-items: center;
-
   input {
     margin-bottom: 10px;
     border-radius: 5px;
@@ -120,8 +119,15 @@ const StyledForm = styled(Form)`
   }
   button {
     margin-top: 10px;
+    width: 100%;
+    min-width: 400px;
+    max-width: 450px;
+
+    box-sizing: border-box;
   }
   @media (max-width: 768px) {
     width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
   }
 `;
