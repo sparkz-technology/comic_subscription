@@ -2,6 +2,7 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Cookies from "js-cookie";
+import { ErrorMessage } from "formik";
 
 import { CreateCustomer } from "../services/apiSubscription";
 import {
@@ -21,13 +22,36 @@ import {
 import Button from "../ui/Button";
 import { FieldInput } from "../ui/Input";
 import { useState } from "react";
+import MiniLoader from "../ui/MiniLoader";
 
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .matches(
+      /^(?=.*[a-z])/,
+      "Password must contain at least one lowercase letter"
+    )
+    .matches(
+      /^(?=.*[A-Z])/,
+      "Password must contain at least one uppercase letter"
+    )
+    .matches(/^(?=.*\d)/, "Password must contain at least one number")
+    .matches(
+      /^(?=.*[@$!%*?&])/,
+      "Password must contain at least one special character"
+    )
+    .min(8, "Password must be at least 8 characters"),
+});
 const Register = ({ toggleShow }) => {
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (values) => {
     try {
+      setLoading(true);
       const responce = await CreateCustomer(values.email, values.password);
+      setLoading(false);
       if (!responce) return;
-
       const { customer } = responce;
       Cookies.set("customer", customer.id);
       toggleShow();
@@ -36,25 +60,6 @@ const Register = ({ toggleShow }) => {
     }
   };
 
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string()
-      .required("Password is required")
-      .matches(
-        /^(?=.*[a-z])/,
-        "Password must contain at least one lowercase letter"
-      )
-      .matches(
-        /^(?=.*[A-Z])/,
-        "Password must contain at least one uppercase letter"
-      )
-      .matches(/^(?=.*\d)/, "Password must contain at least one number")
-      .matches(
-        /^(?=.*[@$!%*?&])/,
-        "Password must contain at least one special character"
-      )
-      .min(8, "Password must be at least 8 characters"),
-  });
   const [isVisible, setIsVisible] = useState(true);
 
   const toggleVisibility = () => {
@@ -81,8 +86,15 @@ const Register = ({ toggleShow }) => {
                       id="email"
                       name="email"
                       placeholder="Email"
+                      disabled={loading}
                     />
-                    <ErrorContainer name="email" component="div" />
+                    <ErrorContainer>
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="error"
+                      />
+                    </ErrorContainer>
                   </Row>
                   <Row>
                     <ToggleContainer>
@@ -91,6 +103,7 @@ const Register = ({ toggleShow }) => {
                         id="password"
                         name="password"
                         placeholder="password"
+                        disabled={loading}
                       />
                       <ToggleButton
                         type="button"
@@ -99,7 +112,13 @@ const Register = ({ toggleShow }) => {
                         {isVisible ? <InvisibleIcon /> : <VisibleIcon />}
                       </ToggleButton>
                     </ToggleContainer>
-                    <ErrorContainer name="password" component="div" />
+                    <ErrorContainer>
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        className="error"
+                      />
+                    </ErrorContainer>
                   </Row>
                   <NavigationContainer>
                     <NavigateBtn onClick={toggleShow} type="button">
@@ -107,8 +126,13 @@ const Register = ({ toggleShow }) => {
                     </NavigateBtn>
                   </NavigationContainer>
                   <Row>
-                    <Button variant="subscribe" width="100px" type="submit">
-                      Register
+                    <Button
+                      variant="subscribe"
+                      width="100px"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading ? <MiniLoader /> : " Register"}
                     </Button>
                   </Row>
                 </InputContainer>

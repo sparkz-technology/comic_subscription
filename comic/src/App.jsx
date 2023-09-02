@@ -11,11 +11,13 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 import Trial from "./pages/Trial";
 import Home from "./pages/Home";
 import config from "./config";
+import Loader from "./ui/Loader";
 const stripePromise = loadStripe(config.STRIPE_PUBLIC_KEY);
 
 const router = createBrowserRouter([
   { path: "/", element: <Trial /> },
   { path: "/home", element: <Home /> },
+  { path: "/test", element: <Loader /> },
   {
     path: "/dashboard",
     element: (

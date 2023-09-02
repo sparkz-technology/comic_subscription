@@ -8,6 +8,7 @@ import * as Yup from "yup";
 
 import { FieldInput } from "../ui/Input";
 import { Button } from "../ui/Button";
+import MiniLoader from "../ui/MiniLoader";
 import { setShowSubscribe, setSubscriptionStatus } from "../SubscribeSlice";
 
 const Subscribe = () => {
@@ -15,6 +16,7 @@ const Subscribe = () => {
   const dispatch = useDispatch();
   const clientSecret = useSelector((state) => state.subscribe.clientSecret);
   const [paymentIntent, setPaymentIntent] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (paymentIntent && paymentIntent.status === "succeeded") {
@@ -33,6 +35,7 @@ const Subscribe = () => {
   }
 
   const handleSubmit = async (value) => {
+    setLoading(true);
     const cardElement = elements.getElement(CardElement);
 
     const { error, paymentIntent } = await stripe.confirmCardPayment(
@@ -49,8 +52,10 @@ const Subscribe = () => {
 
     if (error) {
       toast.error(error.message);
+      setLoading(false);
       return;
     }
+    setLoading(false);
     setPaymentIntent(paymentIntent);
   };
   const validationSchema = Yup.object().shape({
@@ -67,13 +72,24 @@ const Subscribe = () => {
         onSubmit={handleSubmit}
       >
         <StyledForm>
-          <FieldInput type="text" id="name" name="name" placeholder="Name" />
+          <FieldInput
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Name"
+            disabled={loading}
+          />
           <ErrorContainer name="name" component="div" />
 
           <StyledCardElement />
 
-          <Button variant="subscribe" width="200px" type="submit">
-            Subscribe
+          <Button
+            variant="subscribe"
+            width="200px"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? <MiniLoader /> : "Subscribe"}
           </Button>
         </StyledForm>
       </Formik>

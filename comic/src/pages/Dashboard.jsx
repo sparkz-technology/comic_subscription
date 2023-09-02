@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Account from "../components/Account";
 import { setShowSubscribe, setSubscriptionData } from "../SubscribeSlice";
@@ -10,8 +10,10 @@ import { GetSubscriptionDetails } from "../services/apiSubscription";
 import Subscribe from "../components/Subscribe";
 import { setSubscriptionStatus } from "../SubscribeSlice";
 import Navbar from "../components/Navbar";
+import Spinner from "../ui/Spinner";
 
 function Dashboard() {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const subscriptionStatus = useSelector(
     (state) => state.subscribe.subscribtionStatus
@@ -19,7 +21,9 @@ function Dashboard() {
   const showSubscribe = useSelector((state) => state.subscribe.showSubscribe);
   const createSubscription = async () => {
     try {
+      setLoading(true);
       const response = await CreateSubscription();
+      setLoading(false);
       const { subscriptionId, clientSecret } = response;
       console.log(subscriptionId, clientSecret);
       dispatch(setSubscriptionData({ subscriptionId, clientSecret }));
@@ -46,6 +50,7 @@ function Dashboard() {
   return (
     <>
       <Navbar />
+
       <StyledDashboard>
         <StyledPlan>
           <h1>Subscribe to a plan</h1>
@@ -63,7 +68,9 @@ function Dashboard() {
               </p>
 
               {subscriptionStatus !== "active" ? (
-                <button onClick={() => createSubscription()}>Select</button>
+                <button onClick={() => createSubscription()} disabled={loading}>
+                  Select
+                </button>
               ) : (
                 <button>Subscribed</button>
               )}
@@ -71,6 +78,7 @@ function Dashboard() {
           </Card>
         </StyledPlan>
         <StyledAccount>
+          {loading && <Spinner />}
           {showSubscribe && <Subscribe />}
           {!showSubscribe && <Account />}
         </StyledAccount>

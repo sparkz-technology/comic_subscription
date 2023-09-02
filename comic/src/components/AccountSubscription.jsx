@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import { setSubscriptionStatus } from "../SubscribeSlice";
@@ -9,27 +8,34 @@ import {
   SubscriptionCancel,
   GetSubscriptionDetails,
 } from "../services/apiSubscription";
+import Loader from "../ui/Loader";
 
 function AccountSubscription() {
   const dispatch = useDispatch();
-  const [subscriptionsDetails, setSubscriptionsDetails] = useState({} || null);
+  const [subscriptionsDetails, setSubscriptionsDetails] = useState(null);
+  const [loader, setLoader] = useState(false);
   const subscriptionId =
     useSelector((state) => state.subscribe.subscriptionId) ||
     Cookies.get("subscriptionId");
+
   const handleClick = async (e) => {
     e.preventDefault();
+    setLoader(true);
     const subscriptionsCancelData = await SubscriptionCancel(subscriptionId);
     setSubscriptionsDetails(subscriptionsCancelData);
     dispatch(
       setSubscriptionStatus(subscriptionsCancelData.canceledSubscription.status)
     );
+    setLoader(false);
   };
+
   useEffect(() => {
     const fetchData = async () => {
       if (!Cookies.get("customer")) return;
-
+      setLoader(true);
       const subscriptionsData = await GetSubscriptionDetails();
       setSubscriptionsDetails(subscriptionsData); // Update with the user data
+      setLoader(false);
       Cookies.set("subscriptionId", subscriptionsData?.latestSubscription?.id);
 
       dispatch(
@@ -39,54 +45,123 @@ function AccountSubscription() {
     fetchData();
   }, [dispatch, subscriptionId]);
 
-  if (!subscriptionsDetails) {
-    return <p>Loading subscription details...</p>;
+  if (!subscriptionsDetails || !subscriptionsDetails.latestSubscription?.id) {
+    return loader ? (
+      <Loader />
+    ) : (
+      <Container>
+        <h1>Subscribe to Tamil Comic</h1>
+        <StyledAccountSubscription>
+          <h2>subscription benefits </h2>
+          <p>
+            Stay updated with the latest Tamil comic releases by subscribing
+            today!
+          </p>
+
+          <p>Benefits of subscribing:</p>
+          <ul>
+            <li>Access to exclusive Tamil comic content.</li>
+            <li>
+              Receive regular updates about new releases and special promotions.
+            </li>
+            <li>Join our vibrant Tamil comic community.</li>
+          </ul>
+
+          <p>
+            Subscribe now and immerse yourself in the world of Tamil comics.
+          </p>
+        </StyledAccountSubscription>
+      </Container>
+    );
   }
 
   return (
-    <StyledAccountSubscription>
-      <h1>Account</h1>
-      {subscriptionsDetails.latestSubscription?.id ? (
-        <div>
-          <p>
-            <strong> Customer ID: </strong>
-            {subscriptionsDetails.latestSubscription?.customer}
-          </p>
-          <p>
-            <strong>Subscription ID: </strong>
-            {subscriptionsDetails.latestSubscription?.id}
-          </p>
-          <p>
-            <strong> Subscription Status: </strong>
-            {subscriptionsDetails?.latestSubscription?.status}
-          </p>
-          <p>
-            <strong> Current period end: </strong>
-            {new Date(
-              subscriptionsDetails.latestSubscription?.current_period_end * 1000
-            ).toString()}
-          </p>
-          {subscriptionsDetails.latestSubscription?.status !== "canceled" && (
-            <button onClick={handleClick}>Cancel Subscribtion </button>
-          )}
-        </div>
+    <Container>
+      {loader ? (
+        <Loader />
       ) : (
-        <p>No subscription found</p>
+        <>
+          <h1>Account Settings</h1>
+          <StyledAccountSubscription>
+            <h1>Account</h1>
+            <div>
+              <p>
+                <strong> Customer ID: </strong>
+                {subscriptionsDetails.latestSubscription?.customer}
+              </p>
+              <p>
+                <strong>Subscription ID: </strong>
+                {subscriptionsDetails.latestSubscription?.id}
+              </p>
+              <p>
+                <strong> Subscription Status: </strong>
+                {subscriptionsDetails?.latestSubscription?.status}
+              </p>
+              <p>
+                <strong> Current period end: </strong>
+                {new Date(
+                  subscriptionsDetails.latestSubscription?.current_period_end *
+                    1000
+                ).toString()}
+              </p>
+              {subscriptionsDetails.latestSubscription?.status !==
+                "canceled" && (
+                <button onClick={handleClick}>Cancel Subscription</button>
+              )}
+            </div>
+          </StyledAccountSubscription>
+        </>
       )}
-    </StyledAccountSubscription>
+    </Container>
   );
 }
 
 export default AccountSubscription;
+
+const Container = styled.div`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+
+  li {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+  }
+`;
+
 const StyledAccountSubscription = styled.div`
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 20px;
   box-sizing: border-box;
-  h1 {
+  h2 {
     font-size: 22px;
     margin: 0 0 20px;
+  }
+  h1 {
+    font-size: 2rem;
+    font-family: sans-serif;
+    font-weight: 700;
   }
   strong {
     font-family: "Roboto Mono", monospace;
@@ -102,7 +177,7 @@ const StyledAccountSubscription = styled.div`
     width: 100%;
     box-sizing: border-box;
     &:hover {
-      border: 1px solid#c70039;
+      border: 1px solid #c70039;
       background-color: #900c3f;
     }
   }

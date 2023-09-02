@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { useState } from "react";
+import { ErrorMessage } from "formik";
 
 import { RetrieveCustomer } from "../services/apiSubscription";
 import {
@@ -22,17 +23,20 @@ import {
 import { FieldInput } from "../ui/Input";
 import { Container, InputContainer } from "../styles/Form";
 import { Button } from "../ui/Button";
+import MiniLoader from "../ui/MiniLoader";
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().required("Password is required"),
 });
 function Login({ toggleShow }) {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   async function handleSubmit(values) {
     try {
+      setLoading(true);
       const responce = await RetrieveCustomer(values.email, values.password);
+      setLoading(false);
       if (!responce) return;
-
       const { customer, token } = responce;
       Cookies.set("customer", customer.id);
       Cookies.set("token", token);
@@ -66,8 +70,15 @@ function Login({ toggleShow }) {
                       id="email"
                       name="email"
                       placeholder="Email"
+                      disabled={loading}
                     />
-                    <ErrorContainer name="email" component="div" />
+                    <ErrorContainer>
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="error"
+                      />
+                    </ErrorContainer>
                   </Row>
                   <Row>
                     <ToggleContainer>
@@ -76,6 +87,7 @@ function Login({ toggleShow }) {
                         id="password"
                         name="password"
                         placeholder="password"
+                        disabled={loading}
                       />
                       <ToggleButton
                         type="button"
@@ -84,7 +96,13 @@ function Login({ toggleShow }) {
                         {isVisible ? <InvisibleIcon /> : <VisibleIcon />}
                       </ToggleButton>
                     </ToggleContainer>
-                    <ErrorContainer name="password" component="div" />
+                    <ErrorContainer>
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        className="error"
+                      />
+                    </ErrorContainer>
                   </Row>
                   <NavigationContainer>
                     <NavigateBtn onClick={toggleShow} type="button">
@@ -92,8 +110,13 @@ function Login({ toggleShow }) {
                     </NavigateBtn>
                   </NavigationContainer>
                   <Row>
-                    <Button variant="subscribe" width="100px" type="submit">
-                      Login
+                    <Button
+                      variant="subscribe"
+                      width="100px"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading ? <MiniLoader /> : "Login"}
                     </Button>
                   </Row>
                 </InputContainer>
