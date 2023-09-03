@@ -14,5 +14,9 @@ async function subscription(queue, user) {
     console.log(error);
   }
 }
-
+// subscription("cancelSubscription");
+// subscription("subscription");
+// subscription("trialSubscription");
+// subscription("verify");
+// subscription("passwordChanged");
 module.exports = { subscription };

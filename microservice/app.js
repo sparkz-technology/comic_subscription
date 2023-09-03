@@ -5,11 +5,13 @@ const schedule = require("node-schedule");
 const { subscriber } = require("./controllers/user");
 const { deleteSubscriber } = require("./controllers/user");
 const config = require("./config/config");
+const sendPasswordChangedMail = require("./services/sendPasswordChangeMail");
 const {
   sendMail,
   sendConfirmationMail,
   sendCancelMail,
   sendTrialMail,
+  sendVerifyMail,
 } = require("./services/mail");
 
 const {
@@ -26,9 +28,14 @@ async function connectQuery() {
     await connect("cancelSubscription");
     await connect("subscription");
     await connect("trialSubscription");
+    await connect("verify");
+    await connect("passwordChanged");
+
     console.log(`Connected to RabbitMQ in Microservice!`);
   } catch (err) {
-    console.error("Error connecting to RabbitMQ in Microservice!");
+    if (err.message) console.error(err.message);
+    if (err.stack) console.error(err.stack);
+    process.exit(1);
   }
 }
 connectQuery();
@@ -51,7 +58,18 @@ async function connect(queue) {
         console.log(`Received message: ${consume} from ${queue}`);
         console.log(consume.email);
         await trialSubscriber(consume);
+      } else if (queue === "verify") {
+        console.log(`Received message: ${consume} from ${queue}`);
+
+        console.log(consume.email);
+        await sendVerifyMail(consume);
+      } else if (queue === "passwordChanged") {
+        console.log(`Received message: ${consume} from ${queue}`);
+
+        console.log(consume.email);
+        await sendPasswordChangedMail(consume);
       }
+
       channel.ack(message);
     });
   } catch (error) {

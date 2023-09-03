@@ -4,6 +4,9 @@ const stripe = require("stripe")(config.stripe_secret_key);
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const crypto = require("crypto");
+
+const { subscription } = require("../microservices/subscription");
 
 exports.postCreateCustomer = async (req, res, next) => {
   const errors = validationResult(req);
@@ -168,6 +171,121 @@ exports.postCancelSubscription = async (req, res, next) => {
     console.warn("testing purpose");
     console.log(canceledSubscription, "canceledSubscription");
     res.status(200).send({ canceledSubscription });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+exports.postRequestPasswordReset = async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      const error = new Error("No user found");
+      error.statusCode = 400;
+      throw error;
+    }
+    //! set the verifyToken for 5 minutes
+    const resetToken = await crypto.randomBytes(32).toString("hex").slice(0, 6);
+    const resetTokenExpiration = Date.now() + 300000;
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = resetTokenExpiration;
+    console.log(user.verifyTokenExpiration);
+    await user.save();
+    await subscription("verify", { email, verifyToken: resetToken });
+    console.log(email, { verifyToken: resetToken });
+    res.status(201).json({ message: "Verify code sent successfully" });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+exports.postVerifyResetToken = async (req, res, next) => {
+  const resetToken = req.params.resetToken;
+  const { email } = req.body;
+  try {
+    if (!resetToken) {
+      const error = new Error("No code found");
+      error.statusCode = 400;
+      throw error;
+    }
+    if (!email) {
+      const error = new Error("No email found");
+      error.statusCode = 400;
+      throw error;
+    }
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      const error = new Error("No user found");
+      error.statusCode = 400;
+      throw error;
+    }
+    if (user.resetToken !== resetToken) {
+      const error = new Error("Invalid code");
+      error.statusCode = 400;
+      throw error;
+    }
+    if (user.resetTokenExpiration < Date.now()) {
+      const error = new Error("Code expired");
+      error.statusCode = 400;
+      throw error;
+    }
+    // user.verifyTokenExpiration = undefined;
+    user.resetToken = undefined;
+    await user.save();
+    const token = jwt.sign(
+      {
+        email: user.email,
+        resetTokenExpiration: user.resetTokenExpiration,
+      },
+      config.jwt_secret,
+      { expiresIn: config.jwt_expires_in_verify }
+    );
+
+    res.status(201).json({ message: "Verify successfully", token: token });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+exports.postPasswordReset = async (req, res, next) => {
+  const { password, token } = req.body;
+  try {
+    if (!password) {
+      const error = new Error("No password found");
+      error.statusCode = 400;
+      throw error;
+    }
+    if (!token) {
+      const error = new Error("No token found");
+      error.statusCode = 400;
+      throw error;
+    }
+    const decodedToken = jwt.verify(token, config.jwt_secret);
+    const user = await User.findOne({ email: decodedToken.email });
+    if (!user) {
+      const error = new Error("No user found");
+      error.statusCode = 400;
+      throw error;
+    }
+    if (decodedToken.resetTokenExpiration < Date.now()) {
+      const error = new Error("Time expired");
+      error.statusCode = 400;
+      throw error;
+    }
+    const hashedPw = await bcrypt.hash(password, 12);
+    user.password = hashedPw;
+    user.resetTokenExpiration = undefined;
+    await user.save();
+    await subscription("passwordChanged", { email: user.email });
+    res.status(201).json({ message: "Password reset successfully" });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

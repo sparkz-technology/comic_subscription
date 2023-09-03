@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import * as Yup from "yup";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { useState } from "react";
 import { ErrorMessage } from "formik";
@@ -109,7 +109,7 @@ function Login({ toggleShow }) {
                       Don't have an account?
                     </NavigateBtn>
                   </NavigationContainer>
-                  <Row>
+                  <ButtonRow>
                     <Button
                       variant="subscribe"
                       width="100px"
@@ -118,7 +118,8 @@ function Login({ toggleShow }) {
                     >
                       {loading ? <MiniLoader /> : "Login"}
                     </Button>
-                  </Row>
+                    <Link to="/forgot-password">Forgot Password?</Link>
+                  </ButtonRow>
                 </InputContainer>
               </Form>
             </Formik>
@@ -130,3 +131,10 @@ function Login({ toggleShow }) {
 }
 
 export default Login;
+import styled from "styled-components";
+
+export const ButtonRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;

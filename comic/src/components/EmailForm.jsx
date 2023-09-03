@@ -70,6 +70,10 @@ export default EmailForm;
 
 const Container = styled.div`
   margin-top: 20px;
+
+  @media (max-width: 768px) {
+    padding: 0 20px;
+  }
 `;
 
 const InputContainer = styled.div`

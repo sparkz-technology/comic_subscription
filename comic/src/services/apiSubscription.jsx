@@ -100,3 +100,52 @@ export const GetSubscriptionDetails = async () => {
     console.error(error);
   }
 };
+
+export const PostPaswordReset = async (email) => {
+  try {
+    const response = await Axios.post(`${API_URL}/reset-password-request`, {
+      email,
+    });
+    const data = await response.data;
+    toast.success(data.message);
+
+    return data;
+  } catch (error) {
+    toast.error(error.response.data.message || error.message);
+  }
+};
+// "/verify-reset-token/:verifyToken",
+// subscriptionController.postVerifyResetToken
+// );
+// router.post("/reset-password", subscriptionController.postPasswordReset);
+export const PostVerifyResetToken = async (data) => {
+  const { code, email } = data;
+  console.log(code, email);
+  console.log(data);
+  try {
+    const response = await Axios.post(`${API_URL}/verify-reset-token/${code}`, {
+      email,
+    });
+    const data = await response.data;
+    toast.success(data.message);
+    return data;
+  } catch (error) {
+    toast.error(error.response.data.message || error.message);
+  }
+};
+export const PostPasswordReset = async (data) => {
+  const { password, token } = data;
+  console.log(data);
+  try {
+    const response = await Axios.post(`${API_URL}/reset-password`, {
+      password,
+      token,
+    });
+    const data = await response.data;
+    toast.success(data.message);
+
+    return data;
+  } catch (error) {
+    toast.error(error.response.data.message || error.message);
+  }
+};

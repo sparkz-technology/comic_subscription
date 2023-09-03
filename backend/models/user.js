@@ -9,6 +9,11 @@ const userSchema = new Schema(
     subscriptionStatus: { type: String },
     Current_period_end: { type: String },
     last4: { type: String },
+    resetToken: String,
+    resetTokenExpiration: {
+      type: Number,
+      // default: Date.now() + 300000, // 5 minutes
+    },
   },
   { timestamps: true }
 );

@@ -200,9 +200,42 @@ async function sendTrialMail() {
   }
 }
 
+async function sendVerifyMail(consume) {
+  try {
+    const { email, verifyToken } = consume;
+    const templatePath = path.join(__dirname, "../templates/verify.html");
+    const template = fs.readFileSync(templatePath, "utf-8");
+    const personalizedTemplate = template
+      .replace("[Subscriber's Name]", email.split("@")[0])
+      .replace("[Verification_Code]", verifyToken);
+    const mailOptions = {
+      from: config.email,
+      to: email,
+      subject: "Comic World ",
+      html: personalizedTemplate,
+      attachments: [
+        {
+          filename: "logo.png",
+          path: logoUrl,
+          cid: "logoImage",
+        },
+      ],
+    };
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      return `Email sent to ${email}: ${info.response}`;
+    } catch (error) {
+      return `Error sending email to ${email}: ${error}`;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   sendMail,
   sendConfirmationMail,
   sendCancelMail,
   sendTrialMail,
+  sendVerifyMail,
 };

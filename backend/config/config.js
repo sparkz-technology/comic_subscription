@@ -9,4 +9,5 @@ module.exports = {
   jwt_expires_in: process.env.JWT_EXPIRES_IN,
   origin: process.env.ORIGIN,
   stripe_webhook_orgin: process.env.STRIPE_WEBHOOK_ORIGIN,
+  jwt_expires_in_verify: process.env.JWT_EXPIRES_IN_VERIFY,
 };
