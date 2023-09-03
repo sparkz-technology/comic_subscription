@@ -10,10 +10,8 @@ const userSchema = new Schema(
     Current_period_end: { type: String },
     last4: { type: String },
     resetToken: String,
-    resetTokenExpiration: {
-      type: Number,
-      // default: Date.now() + 300000, // 5 minutes
-    },
+    resetTokenExpiration: { type: Number },
+    passwordResetCount: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

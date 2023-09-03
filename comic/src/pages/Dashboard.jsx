@@ -11,6 +11,7 @@ import Subscribe from "../components/Subscribe";
 import { setSubscriptionStatus } from "../SubscribeSlice";
 import Navbar from "../components/Navbar";
 import Spinner from "../ui/Spinner";
+// import { setAuthentication } from "../AuthSlice";
 
 function Dashboard() {
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,7 @@ function Dashboard() {
       setLoading(true);
       const response = await CreateSubscription();
       setLoading(false);
+      // if (response.error) dispatch(setAuthentication(false));
       const { subscriptionId, clientSecret } = response;
       console.log(subscriptionId, clientSecret);
       dispatch(setSubscriptionData({ subscriptionId, clientSecret }));

@@ -5,6 +5,7 @@ const initialValue = {
   activeComponent: "A",
   email: "",
   token: "",
+  authentication: false,
 };
 export const AuthSlice = createSlice({
   name: "auth",
@@ -19,7 +20,11 @@ export const AuthSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
+    setAuthentication: (state, action) => {
+      state.authentication = action.payload;
+    },
   },
 });
-export const { setActiveComponent, setEmail, setToken } = AuthSlice.actions;
+export const { setActiveComponent, setEmail, setToken, setAuthentication } =
+  AuthSlice.actions;
 export default AuthSlice.reducer;

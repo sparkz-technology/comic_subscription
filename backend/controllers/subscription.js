@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const crypto = require("crypto");
+const io = require("../socket");
 
 const { subscription } = require("../microservices/subscription");
 
@@ -55,6 +56,7 @@ exports.postRetrieveCustomer = async (req, res, next) => {
       {
         email: loadedUser.email,
         userId: loadedUser._id.toString(),
+        passwordResetCount: loadedUser.passwordResetCount,
       },
       config.jwt_secret,
       { expiresIn: config.jwt_expires_in }
@@ -283,7 +285,9 @@ exports.postPasswordReset = async (req, res, next) => {
     const hashedPw = await bcrypt.hash(password, 12);
     user.password = hashedPw;
     user.resetTokenExpiration = undefined;
+    user.passwordResetCount = user.passwordResetCount + 1;
     await user.save();
+    io.getIO().emit("passwordChanged", { email: user.email });
     await subscription("passwordChanged", { email: user.email });
     res.status(201).json({ message: "Password reset successfully" });
   } catch (err) {

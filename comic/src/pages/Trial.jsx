@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import EmailForm from "../components/EmailForm";
 import {
   Container,
@@ -7,8 +8,14 @@ import {
   StyledLink,
 } from "../styles/Trial";
 import { Logo } from "../ui/Logo";
-
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 function Trial() {
+  const navigate = useNavigate();
+  const isAuthenticated = Cookies.get("customer");
+  useEffect(() => {
+    if (isAuthenticated) navigate("/dashboard");
+  }, [isAuthenticated, navigate]);
   return (
     <Container>
       <Navbar>
