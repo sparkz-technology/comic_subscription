@@ -3,6 +3,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export const Container = styled.div`
   margin-top: 20px;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -16,6 +17,8 @@ export const InputContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
   max-width: 32rem;
   box-sizing: border-box;
@@ -69,9 +72,10 @@ export const StyledForm = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 60vh;
-  background-color: var(--white-color);
+  height: 100%;
+  /* width: 60%; */
+  /* height: 100vh; */
+  /* background-color: var(--white-color); */
   h1 {
     font-size: 2rem;
     margin: 0;
@@ -82,14 +86,19 @@ export const StyledForm = styled.div`
   }
 `;
 export const FormContainer = styled.div`
-  width: 100%;
-  max-width: 500px;
-  padding: 0 20px;
+  /* width: 100%; */
+  /* max-width: 500px; */
+  /* padding: 0 20px; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   box-sizing: border-box;
 `;
 export const ToggleButton = styled.button`
   right: 0;
-  top: 20%;
+  /* top: 50%; */
+  top: ${(props) => props.top}%;
   left: 90%;
   position: absolute;
   background-color: transparent;

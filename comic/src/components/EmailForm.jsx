@@ -1,8 +1,6 @@
 import { Formik } from "formik";
 import styled from "styled-components";
-
-import { Input } from "../ui/Input";
-import Button from "../ui/Button";
+import { BsFillSendFill } from "react-icons/bs";
 import { apiTrial } from "../services/apiTrial";
 
 function EmailForm() {
@@ -40,21 +38,17 @@ function EmailForm() {
           <form onSubmit={handleSubmit}>
             <InputContainer>
               <Input
-                variant="subscribe"
                 type="email"
                 name="email"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.email}
               />
-              <Button
-                variant="subscribe"
-                type="submit"
-                width="200px"
-                disabled={isSubmitting}
-              >
-                Free Trial
-              </Button>
+              <div>
+                <Button type="submit" disabled={isSubmitting}>
+                  <BsFillSendFill size={20} />
+                </Button>
+              </div>
             </InputContainer>
             {touched.email && errors.email && (
               <ErrorMessage>{errors.email}</ErrorMessage>
@@ -79,13 +73,52 @@ const Container = styled.div`
 const InputContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 400px;
+  position: relative;
+  div {
+    position: absolute;
+    right: 1.3%;
+  }
   @media (max-width: 768px) {
     padding: 0 20px;
   }
 `;
 
 const ErrorMessage = styled.div`
-  margin-top: 8px;
+  position: absolute;
+  margin: 8px 0 0 20px;
   color: var(--red-color);
-  font-weight: bold;
+`;
+const Input = styled.input`
+  height: 50px;
+  width: 100%;
+  padding: 0 20px;
+  font-size: 16px;
+  box-sizing: border-box;
+  border-radius: 30px;
+  outline: none;
+  border: 2px solid var(--border-color);
+  &:focus {
+    border-color: #73c9bf;
+  }
+  &:hover {
+    border-color: #73c9bf;
+    box-shadow: 0px 0px 5px 0px #73c9bf;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+const Button = styled.button`
+  height: 40px;
+  width: 100px;
+  border-radius: 30px;
+  outline: none;
+  border: 0px;
+  background-color: #0d0c22;
+  color: var(--white-color);
+  &:hover {
+    background-color: #565564;
+  }
 `;

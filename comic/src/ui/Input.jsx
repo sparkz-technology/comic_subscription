@@ -20,19 +20,27 @@ export const Input = styled.input`
   }
 `;
 export const FieldInput = styled(Field)`
-  height: 40px;
-  width: ${(props) => (props.width ? props.width : "100%")};
-  border-radius: 5px;
+  height: 55px;
+  border-radius: 10px;
   padding: 0 10px;
   font-size: 16px;
   box-sizing: border-box;
   outline: none;
   border: 0px;
   width: 100%;
-  border: 1px solid var(--border-color);
-  &:focus {
-    border-color: var(--blue-color);
+  border: 2px solid var(--border-color);
+  &:hover {
+    border-color: #73c9bf;
+    box-shadow: 0px 0px 5px 0px #73c9bf;
   }
+  &:focus {
+    border-color: #73c9bf;
+    box-shadow: 0px 0px 5px 0px #73c9bf;
+  }
+  &::placeholder {
+    color: var(--border-color);
+  }
+
   @media (max-width: 768px) {
     width: 100%;
   }
