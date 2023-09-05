@@ -41,7 +41,8 @@ const validationSchema = Yup.object().shape({
     )
     .min(8, "Password must be at least 8 characters"),
 });
-const SignupForm = ({ toggleShow }) => {
+const SignupForm = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values) => {
@@ -51,8 +52,8 @@ const SignupForm = ({ toggleShow }) => {
       setLoading(false);
       if (!responce) return;
       const { customer } = responce;
+      navigate("/login");
       Cookies.set("customer", customer.id);
-      toggleShow();
     } catch (error) {
       console.error("Error creating customer:", error);
     }
@@ -133,6 +134,7 @@ const SignupForm = ({ toggleShow }) => {
 export default SignupForm;
 import styled from "styled-components";
 import { StyledLink } from "../ui/StyledLink";
+import { useNavigate } from "react-router-dom";
 const TeamsAndConditions = styled.div`
   display: flex;
   justify-content: center;

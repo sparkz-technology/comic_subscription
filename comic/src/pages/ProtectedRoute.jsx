@@ -7,9 +7,8 @@ function ProtectedRoute({ children }) {
   const navigate = useNavigate();
 
   const isAuthenticated = Cookies.get("customer");
-
   useEffect(() => {
-    if (!isAuthenticated) navigate("/home");
+    if (!isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
 
   return isAuthenticated ? children : null;

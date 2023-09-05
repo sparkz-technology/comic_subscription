@@ -30,8 +30,11 @@ function ForgotPassword() {
   }
   return (
     <StyledForgotPassword>
-      <h1>Forgot Password</h1>
-      <p>Enter your email to reset your password</p>
+      <h1>Forgot Password ?</h1>
+      <p>
+        Enter the email address you used when you joined and we’ll
+        <br /> send you instructions to reset your password.
+      </p>
 
       <Formik
         initialValues={{
@@ -56,7 +59,7 @@ function ForgotPassword() {
             <br />
             <Row>
               <Button type="submit" disabled={loading}>
-                {loading ? <MiniLoader /> : "Submit"}
+                {loading ? <MiniLoader /> : "Send verification code"}
               </Button>
             </Row>
           </StyledForm>
@@ -72,32 +75,29 @@ const StyledForgotPassword = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   height: 300px;
   border-radius: 5px;
   padding: 1rem;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--box-shadow);
   h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    text-align: start;
   }
 `;
 const Error = styled.div`
+  position: absolute;
   color: var(--red-color);
   font-size: 0.8rem;
   margin-top: 0.5rem;
 `;
 const StyledForm = styled(Form)`
+  width: 100%;
   box-sizing: border-box;
-  margin: 0 auto;
-  max-width: 500px;
-  min-width: 400px;
 `;
 const Row = styled.div`
   width: 100%;
-  padding: 0 10px;
   font-size: 16px;
   box-sizing: border-box;
   outline: none;

@@ -9,7 +9,7 @@ function Navbar() {
     Cookies.remove("subscriptionId");
     Cookies.remove("customer");
     Cookies.remove("token");
-    navigate("/home");
+    navigate("/");
   }
   return (
     <StyledNavbar>
@@ -33,12 +33,10 @@ const StyledNavbar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 20px;
+  padding: 15px 20px 20px 10px;
+  gap: 20px;
   background-color: #fff;
-  border-bottom: 1px solid #ddd;
   box-sizing: border-box;
-  z-index: 1;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   h1 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -54,13 +52,15 @@ const StyledNavbar = styled.div`
 const SignOutButton = styled.button`
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 30px;
   padding: 10px 20px;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-family: sans-serif;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
   &:hover {
-    background-color: #ddd;
+    background-color: #0d0c22;
+    color: #fff;
   }
 `;

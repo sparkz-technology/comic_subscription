@@ -19,7 +19,12 @@ router.post(
           }
         })
       ),
-    body("password").trim().isLength({ min: 5 }),
+    body("password")
+      .trim()
+      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)
+      .withMessage(
+        "Password must be at least 8 characters long and contain at least one number, one uppercase and one lowercase letter"
+      ),
   ],
   subscriptionController.postCreateCustomer
 );
@@ -54,6 +59,17 @@ router.post(
   "/verify-reset-token/:resetToken",
   subscriptionController.postVerifyResetToken
 );
-router.post("/reset-password", subscriptionController.postPasswordReset);
+router.post(
+  "/reset-password",
+  [
+    body("password")
+      .trim()
+      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)
+      .withMessage(
+        "Password must be at least 8 characters long and contain at least one number, one uppercase and one lowercase letter"
+      ),
+  ],
+  subscriptionController.postPasswordReset
+);
 
 module.exports = router;

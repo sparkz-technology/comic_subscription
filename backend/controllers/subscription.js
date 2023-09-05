@@ -5,7 +5,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const crypto = require("crypto");
-const io = require("../socket");
 
 const { subscription } = require("../microservices/subscription");
 
@@ -287,7 +286,6 @@ exports.postPasswordReset = async (req, res, next) => {
     user.resetTokenExpiration = undefined;
     user.passwordResetCount = user.passwordResetCount + 1;
     await user.save();
-    io.getIO().emit("passwordChanged", { email: user.email });
     await subscription("passwordChanged", { email: user.email });
     res.status(201).json({ message: "Password reset successfully" });
   } catch (err) {

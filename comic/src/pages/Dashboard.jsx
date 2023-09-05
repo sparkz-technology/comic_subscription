@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 
+import image from "../assets/venom.jpg";
+
 import Account from "../components/Account";
 import { setShowSubscribe, setSubscriptionData } from "../SubscribeSlice";
 import { CreateSubscription } from "../services/apiSubscription";
@@ -11,7 +13,6 @@ import Subscribe from "../components/Subscribe";
 import { setSubscriptionStatus } from "../SubscribeSlice";
 import Navbar from "../components/Navbar";
 import Spinner from "../ui/Spinner";
-// import { setAuthentication } from "../AuthSlice";
 
 function Dashboard() {
   const [loading, setLoading] = useState(false);
@@ -53,34 +54,39 @@ function Dashboard() {
     <>
       <Navbar />
 
+      {loading && <Spinner />}
       <StyledDashboard>
         <StyledPlan>
-          <h1>Subscribe to a plan</h1>
-          <p>Grab Your All-Access Pass to Endless Comics Delight!</p>
-          <Card>
-            <div>
-              <h3>Comic of Tamil</h3>
-            </div>
-            <div>
-              <strong>INR 10.00 </strong>
-              <p>
-                Per month
-                <br />
-                Weekly updates
-              </p>
+          <Container>
+            <Card>
+              <div>
+                <img src={image} alt="comic" height="200px" width="100%" />
+              </div>
+              <div>
+                <h3>Comic of Tamil</h3>
 
-              {subscriptionStatus !== "active" ? (
-                <button onClick={() => createSubscription()} disabled={loading}>
-                  Select
-                </button>
-              ) : (
-                <button>Subscribed</button>
-              )}
-            </div>
-          </Card>
+                <strong>INR 10.00 </strong>
+                <p>
+                  Per month
+                  <br />
+                  Weekly updates
+                </p>
+
+                {subscriptionStatus !== "active" ? (
+                  <button
+                    onClick={() => createSubscription()}
+                    disabled={loading}
+                  >
+                    subscribe
+                  </button>
+                ) : (
+                  <button>Subscribed</button>
+                )}
+              </div>
+            </Card>
+          </Container>
         </StyledPlan>
         <StyledAccount>
-          {loading && <Spinner />}
           {showSubscribe && <Subscribe />}
           {!showSubscribe && <Account />}
         </StyledAccount>
@@ -96,6 +102,7 @@ const StyledDashboard = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -103,30 +110,103 @@ const StyledDashboard = styled.div`
 const StyledPlan = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 20px;
-  width: 40%;
-  height: 100vh;
+  align-items: center;
+  height: 100%;
+  width: 500px;
+`;
+
+const Card = styled.div`
+  background: linear-gradient(rgb(236, 251, 249) 0%, rgb(229, 252, 222) 100%);
+  display: flex;
+  /* align-items: start; */
+  width: 100%;
   box-sizing: border-box;
-  color: var(--white-color);
-  /* background-color: var(--white-color);
-   */
-  background-color: #040d12;
-  h3 {
-    font-family: "Delicious Handrawn", cursive;
-    font-weight: 400;
-    font-size: 2rem;
-    text-align: center;
-    margin: 0;
-  }
-  p {
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+  translate: all 0.2s ease-in-out;
+  gap: 20px;
+  padding: 40px;
+  border-radius: 48px;
+  // select first div
+  strong {
     font-size: 1.5rem;
     font-family: sans-serif;
     font-weight: 700;
+  }
+  p {
     text-align: center;
-    padding: 0 20px;
+    font-size: 1rem;
+    font-family: sans-serif;
+    font-weight: 700;
+  }
+  & > div:first-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    width: 100%;
+    img {
+      width: 100%;
+      object-fit: fill;
+
+      &:hover {
+        transform: scale(1.1);
+        transition: all 0.2s ease-in-out;
+        transform: all 0.2s ease-in-out;
+        transform: scale(1.1);
+      }
+    }
+
+    box-sizing: border-box;
+  }
+
+  & > div:last-child {
+    display: flex;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  button {
+    padding: 10px;
+    border-radius: 30px;
+    border: none;
+    background-color: var(--red-color);
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.1rem;
+    align-items: center;
+    font-family: sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--red-color-hover);
+      transition: all 0.2s ease-in-out;
+    }
+  }
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 48px;
+  box-sizing: border-box;
+  color: #0d0c22;
+
+  h3 {
+    font-weight: bold;
+    font-size: 1.5rem;
     margin: 0;
+  }
+  p {
+    font-size: 1rem;
+    font-family: sans-serif;
+    font-weight: 700;
+    text-align: start;
   }
 
   h1 {
@@ -154,76 +234,5 @@ const StyledAccount = styled.div`
     height: 100%;
     margin: 20px;
     margin-bottom: 40px;
-  }
-`;
-const Card = styled.div`
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-  max-width: 250px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-  gap: 20px;
-  padding: 20px;
-  box-shadow: 0 0 10px #ccc;
-  /* background-color: #fff; */
-  background-color: #0b1a24;
-  transition: all 0.5s ease-in-out;
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px #ccc;
-    cursor: pointer;
-  }
-
-  //first div
-  div:first-child {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    gap: 20px;
-    box-sizing: border-box;
-    width: 100%;
-    /* color: var(--red-color); */
-    /* background-color: var(--white-color); */
-  }
-  //last div
-  div:last-child {
-    padding: 20px;
-    display: flex;
-    gap: 20px;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-    /* background-color: #fff; */
-  }
-  strong {
-    font-size: 2rem;
-    font-family: sans-serif;
-    font-weight: 700;
-  }
-  p {
-    font-size: 1rem;
-    font-family: sans-serif;
-    font-weight: 700;
-  }
-  button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: 1px solid #900c3f;
-    background-color: #c70039;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.5s ease-in-out;
-    &:hover {
-      background-color: #900c3f;
-      border: 1px solid #c70039;
-    }
   }
 `;

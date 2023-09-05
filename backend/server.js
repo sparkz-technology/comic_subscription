@@ -6,19 +6,15 @@ async function connect() {
   try {
     await mongoose.connect(config.mongo_url, {
       useNewUrlParser: true,
-      useUnifiedTopology: true, // Add this option for avoiding deprecation warning
+      useUnifiedTopology: true,
     });
 
     const server = app.listen(config.port, () => {
-      console.log("http://localhost:" + config.port);
-      console.log("MongoDB is running on port", config.mongo_url);
+      console.log("Server is running on http://localhost:" + config.port);
+      console.log("MongoDB is running on", config.mongo_url);
     });
-    const io = require("./socket").init(server); // socket.io is initialized
-    io.on("connection", () => {
-      console.log("Client connected");
-    });
-  } catch (err) {
-    console.error("Error connecting to MongoDB:", err);
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
   }
 }
 

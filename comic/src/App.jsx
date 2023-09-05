@@ -8,8 +8,7 @@ import store from "./Store";
 import GlobalStyles from "./styles/GlobalStyles";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./pages/ProtectedRoute";
-import Trial from "./pages/Trial";
-// import Home from "./pages/Home";
+import Home from "./pages/Home";
 import config from "./config";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
@@ -17,11 +16,10 @@ import Signup from "./pages/Signup";
 const stripePromise = loadStripe(config.STRIPE_PUBLIC_KEY);
 
 const router = createBrowserRouter([
-  { path: "/", element: <Trial /> },
-  // { path: "/home", element: <Home /> },
-  { path: "/forgot-password", element: <ForgotPassword /> },
-  { path: "/login", element: <Login /> },
+  { path: "/", element: <Home /> },
   { path: "/signup", element: <Signup /> },
+  { path: "/login", element: <Login /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
   {
     path: "/dashboard",
     element: (

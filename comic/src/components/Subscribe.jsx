@@ -63,7 +63,7 @@ const Subscribe = () => {
   });
 
   return (
-    <>
+    <StyledSubscribe>
       <h1>Subscribe</h1>
       <p> Unlock Limitless Adventures: Subscribe Now!</p>
       <Formik
@@ -79,7 +79,9 @@ const Subscribe = () => {
             placeholder="Name"
             disabled={loading}
           />
-          <ErrorContainer name="name" component="div" />
+          <Gap>
+            <ErrorContainer name="name" component="div" className="error" />
+          </Gap>
 
           <StyledCardElement />
 
@@ -93,12 +95,25 @@ const Subscribe = () => {
           </Button>
         </StyledForm>
       </Formik>
-    </>
+    </StyledSubscribe>
   );
 };
 
 export default Subscribe;
 import styled from "styled-components";
+
+const Gap = styled.div`
+  position: relative;
+  height: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const StyledSubscribe = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+`;
 
 const StyledCardElement = styled(CardElement)`
   border: 1px solid #ccc;
@@ -121,9 +136,15 @@ const ErrorContainer = styled(ErrorMessage)`
 const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
+  .error {
+    position: absolute;
+    top: 2px;
+    color: red;
+    font-size: 0.8rem;
+    text-align: left;
+  }
   input {
-    margin-bottom: 10px;
     border-radius: 5px;
     padding: 0 20px;
     height: 40px;

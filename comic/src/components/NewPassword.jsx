@@ -41,11 +41,12 @@ function NewPassword() {
     const responce = await PostPasswordReset(data);
     if (!responce) return;
     dispatch(setActiveComponent("A"));
-    navigate("/home");
+    navigate("/login");
   }
   return (
     <StyledNewPassword>
-      <h1>NewPassword</h1>
+      <h1>New Password</h1>
+      <p>Enter your new password to reset the old password</p>
       <Formik
         initialValues={{
           password: "",
@@ -76,9 +77,7 @@ function NewPassword() {
             />
           </Row>
           <br />
-          <Row>
-            <Button type="submit">Submit</Button>
-          </Row>
+          <Button type="submit">Change password</Button>
         </StyledForm>
       </Formik>
     </StyledNewPassword>
@@ -90,21 +89,20 @@ const StyledNewPassword = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   height: 400px;
+  width: 400px;
   border-radius: 5px;
   padding: 1rem;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--box-shadow);
   box-sizing: border-box;
-  gap: 10px;
   h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1rem;
   }
 
   & .error {
+    position: absolute;
+    top: 90%;
     color: var(--red-color);
     font-size: 0.8rem;
   }
@@ -112,14 +110,14 @@ const StyledNewPassword = styled.div`
 const StyledForm = styled(Form)`
   box-sizing: border-box;
   margin: 0 auto;
-  max-width: 500px;
-  min-width: 400px;
+
   width: 100%;
 `;
 const Row = styled.div`
+  position: relative;
   width: 100%;
-  padding: 10px;
   font-size: 16px;
+  padding: 1rem 0;
   box-sizing: border-box;
   outline: none;
   display: flex;

@@ -2,8 +2,11 @@ import { Formik } from "formik";
 import styled from "styled-components";
 import { BsFillSendFill } from "react-icons/bs";
 import { apiTrial } from "../services/apiTrial";
+import { useState } from "react";
+import MiniLoader from "../ui/MiniLoader";
 
 function EmailForm() {
+  const [loading, setLoading] = useState(false);
   return (
     <Container>
       <Formik
@@ -20,7 +23,9 @@ function EmailForm() {
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
+          setLoading(true);
           await apiTrial(values.email);
+          setLoading(false);
           values.email = "";
           setSubmitting(false);
         }}
@@ -46,7 +51,13 @@ function EmailForm() {
               />
               <div>
                 <Button type="submit" disabled={isSubmitting}>
-                  <BsFillSendFill size={20} />
+                  {loading ? (
+                    <LoaderContainer>
+                      <MiniLoader />
+                    </LoaderContainer>
+                  ) : (
+                    <BsFillSendFill size={20} />
+                  )}
                 </Button>
               </div>
             </InputContainer>
@@ -90,6 +101,12 @@ const ErrorMessage = styled.div`
   margin: 8px 0 0 20px;
   color: var(--red-color);
 `;
+const LoaderContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+`;
 const Input = styled.input`
   height: 50px;
   width: 100%;
@@ -113,6 +130,7 @@ const Input = styled.input`
 const Button = styled.button`
   height: 40px;
   width: 100px;
+  text-align: center;
   border-radius: 30px;
   outline: none;
   border: 0px;

@@ -1,13 +1,13 @@
+import { useEffect, useState, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-
 import Button from "../ui/Button";
 import { PostVerifyResetToken } from "../services/apiSubscription";
 import { setActiveComponent, setToken } from "../AuthSlice";
+import MiniLoader from "../ui/MiniLoader";
 
 const validationSchema = Yup.object().shape({
   code1: Yup.string().required("Required"),
@@ -19,6 +19,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const CodeVerification = () => {
+  const [loading, setLoading] = useState(false);
   const initialValues = {
     code1: "",
     code2: "",
@@ -30,15 +31,20 @@ const CodeVerification = () => {
   const email = useSelector((state) => state.auth.email);
   const dispatch = useDispatch();
 
+  const [seconds, setSeconds] = useState(300);
+
   const handleSubmit = async (values) => {
     // Handle form submission here
     console.log(values);
+
     const code = Object.values(values).join("");
     console.log(code);
     const data = { email, code };
-    const responce = await PostVerifyResetToken(data);
-    if (!responce) return;
-    dispatch(setToken(responce.token));
+    setLoading(true);
+    const response = await PostVerifyResetToken(data);
+    setLoading(false);
+    if (!response) return;
+    dispatch(setToken(response.token));
     dispatch(setActiveComponent("C"));
   };
 
@@ -58,28 +64,39 @@ const CodeVerification = () => {
       document.getElementById(prevFieldName).focus();
     }
   };
-  const [seconds, setSeconds] = useState(300);
-  useEffect(() => {
+
+  // Create a memoized function using useCallback
+  const updateSeconds = useCallback(() => {
     let timer;
     if (seconds > 0) {
       timer = setTimeout(() => setSeconds(seconds - 1), 1000);
     }
     if (seconds === 0) {
       dispatch(setActiveComponent("A"));
-      toast.error("Timeout ");
+      toast.error("Timeout");
     }
 
     return () => clearTimeout(timer);
   }, [seconds, dispatch]);
+
+  // Use the memoized function in useEffect
+  useEffect(() => {
+    updateSeconds(); // Call the function initially
+  }, [updateSeconds]);
+
   function formateTime(seconds) {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
     return `${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`;
   }
+
   return (
     <StyledCodeVerification>
       <h1>Code Verification</h1>
-      <p>Please enter the code sent to your email</p>
+      <p>
+        Please check your emails for a message with <br />
+        your code. Your code is 6 digits long.
+      </p>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -105,9 +122,15 @@ const CodeVerification = () => {
                   />
                 ))}
               </CodeInputContainer>
-              {<Timer> {formateTime(seconds)}</Timer>}
+              <Timer>{formateTime(seconds)}</Timer>
+              <p
+                className="resendCode"
+                onClick={() => dispatch(setActiveComponent("A"))}
+              >
+                Resend Code ?
+              </p>
               <Button type="submit" className="verify-button">
-                Verify
+                {loading ? <MiniLoader /> : "Verify"}
               </Button>
             </div>
           </Form>
@@ -153,12 +176,21 @@ const StyledCodeVerification = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   height: 400px;
   border-radius: 5px;
   padding: 1rem;
-  border: 1px solid var(--border-color);
   box-sizing: border-box;
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  // last paragraph tag in the component only last paragraph tag in the component only
+
+  .resendCode {
+    cursor: pointer;
+    text-decoration: underline;
+  }
   @media (max-width: 768px) {
     width: 100%;
     border: none;

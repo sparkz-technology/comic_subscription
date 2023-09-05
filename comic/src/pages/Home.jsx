@@ -1,59 +1,40 @@
-// import { styled } from "styled-components";
-// import Login from "../components/LoginForm";
+import Cookies from "js-cookie";
+import EmailForm from "../components/EmailForm";
+import { StyledHome, Navbar } from "../styles/Home";
+import { Logo } from "../ui/Logo";
+import { StyledLink } from "../ui/StyledLink";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+function Home() {
+  const navigate = useNavigate();
+  const isAuthenticated = Cookies.get("customer");
+  useEffect(() => {
+    if (isAuthenticated) navigate("/dashboard");
+  }, [isAuthenticated, navigate]);
+  return (
+    <>
+      <Navbar>
+        <div>
+          <Logo theme="light" />
+          <h1>Comic World</h1>
+        </div>
+        <div>
+          <StyledLink variant="withGap" to="/login">
+            Login
+          </StyledLink>
+          <StyledLink variant="withBg" to="/signup">
+            Sign up
+          </StyledLink>
+        </div>
+      </Navbar>
+      <StyledHome>
+        <h1>Unlimited comics, stories, and more.</h1>
+        <h2>Enjoy what you like.</h2>
+        <p>Ready to read? Enter your email for a free trial.</p>
+        <EmailForm />
+      </StyledHome>
+    </>
+  );
+}
 
-// const Home = () => {
-//   return (
-//     <StyledHome>
-//       <BackgroundImage />
-
-//       <Login />
-//     </StyledHome>
-//   );
-// };
-
-// export default Home;
-// const BackgroundImage = styled.div`
-//   /* background-image: url(https://as2.ftcdn.net/v2/jpg/05/84/02/69/1000_F_584026907_ksj4Rk4TVxWhVduqBsV5QMxr4MjNqqno.jpg); */
-//   background-color: #1e1e1e;
-//   top: 0;
-//   left: 0;
-//   width: 30%;
-//   height: 100vh;
-//   background-size: cover;
-//   background-position: center;
-//   filter: brightness(0.5);
-// `;
-// const Header = styled.div`
-//   position: absolute;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   width: 40%;
-//   top: 0;
-//   left: 0;
-//   height: 100%;
-//   q {
-//     font-size: 3rem;
-//     margin: 0;
-//     font-size: 400;
-//     font-family: var(--font-comic);
-//     padding: 20px;
-//     color: #fff;
-//     text-align: center;
-//   }
-//   @media (max-width: 768px) {
-//     q {
-//       font-size: 2rem;
-//     }
-//   }
-// `;
-// const StyledHome = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   width: 100%;
-//   position: relative;
-//   @media (max-width: 768px) {
-//     flex-direction: column;
-//   }
-// `;
+export default Home;

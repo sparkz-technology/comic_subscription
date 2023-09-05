@@ -50,9 +50,8 @@ function AccountSubscription() {
       <Loader />
     ) : (
       <Container>
-        <h1>Subscribe to Tamil Comic</h1>
+        <h1>subscription benefits </h1>
         <StyledAccountSubscription>
-          <h2>subscription benefits </h2>
           <p>
             Stay updated with the latest Tamil comic releases by subscribing
             today!
@@ -83,7 +82,7 @@ function AccountSubscription() {
         <>
           <h1>Account Settings</h1>
           <StyledAccountSubscription>
-            <h1>Account</h1>
+            <h2>Account</h2>
             <div>
               <p>
                 <strong> Customer ID: </strong>
@@ -119,11 +118,23 @@ function AccountSubscription() {
 export default AccountSubscription;
 
 const Container = styled.div`
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   padding: 20px;
+  border-radius: 48px;
+  /* background-color: #f8f7f4; */
   box-sizing: border-box;
+  h1 {
+    font-size: 1rem;
+    font-family: sans-serif;
+    font-weight: 700;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background-color: #0d0c22;
+  }
   h2 {
     font-size: 24px;
     color: #333;
@@ -149,8 +160,6 @@ const Container = styled.div`
 `;
 
 const StyledAccountSubscription = styled.div`
-  background-color: #fff;
-  border: 1px solid #ddd;
   border-radius: 4px;
   padding: 20px;
   box-sizing: border-box;

@@ -1,21 +1,21 @@
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import ForgotPasswordComponent from "../components/forgotPassword"; // Import the component without renaming it
 import CodeVerification from "../components/CodeVerification";
 import NewPassword from "../components/NewPassword";
-import { Logo } from "../ui/Logo";
+import { useEffect } from "react";
 
 function ForgotPassword() {
   const activeComponent = useSelector((state) => state.auth.activeComponent);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({ type: "auth/setActiveComponent", payload: "A" });
+  }, [dispatch]);
 
   return (
     <>
       <Container>
-        <Header>
-          <Logo />
-          <h1>Comic World </h1>
-        </Header>
         {activeComponent === "A" && <ForgotPasswordComponent />}
         {activeComponent === "B" && <CodeVerification />}
         {activeComponent === "C" && <NewPassword />}
@@ -33,17 +33,4 @@ const Container = styled.div`
   align-items: center;
   height: 100vh;
   box-sizing: border-box;
-  h1 {
-    font-size: 40px;
-    font-weight: 700;
-    margin-bottom: 30px;
-  }
-`;
-const Header = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  margin-bottom: 20px;
 `;

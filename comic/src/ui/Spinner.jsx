@@ -28,6 +28,7 @@ const Container = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
+  height: 100vh;
   background-color: rgba(124, 124, 124, 0.5);
   display: flex;
   align-items: center; // Vertical
