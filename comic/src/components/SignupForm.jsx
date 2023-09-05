@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import Cookies from "js-cookie";
-import { ErrorMessage } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
+import styled from "styled-components";
 
-import { CreateCustomer } from "../services/apiSubscription";
+import { StyledLink } from "../ui/StyledLink";
+import useSignup from "../hooks/useSignup";
 import {
   ToggleContainer,
   ToggleButton,
@@ -13,7 +12,6 @@ import {
 } from "../styles/Form";
 import Button from "../ui/Button";
 import { FieldInput } from "../ui/Input";
-import { useState } from "react";
 import MiniLoader from "../ui/MiniLoader";
 import { FormContainer } from "../ui/FormContainer";
 import Header from "../ui/Header";
@@ -22,49 +20,14 @@ import HoriziondalLine from "../ui/HoriziondalLine";
 import Label from "../ui/Lable";
 import Gap from "../ui/Gap";
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  password: Yup.string()
-    .required("Password is required")
-    .matches(
-      /^(?=.*[a-z])/,
-      "Password must contain at least one lowercase letter"
-    )
-    .matches(
-      /^(?=.*[A-Z])/,
-      "Password must contain at least one uppercase letter"
-    )
-    .matches(/^(?=.*\d)/, "Password must contain at least one number")
-    .matches(
-      /^(?=.*[@$!%*?&])/,
-      "Password must contain at least one special character"
-    )
-    .min(8, "Password must be at least 8 characters"),
-});
 const SignupForm = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (values) => {
-    try {
-      setLoading(true);
-      const responce = await CreateCustomer(values.email, values.password);
-      setLoading(false);
-      if (!responce) return;
-      const { customer } = responce;
-      navigate("/login");
-      Cookies.set("customer", customer.id);
-    } catch (error) {
-      console.error("Error creating customer:", error);
-    }
-  };
-
-  const [isVisible, setIsVisible] = useState(true);
-
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible);
-  };
-
+  const {
+    validationSchema,
+    handleSubmit,
+    loading,
+    isVisible,
+    toggleVisibility,
+  } = useSignup();
   return (
     <FormContainer>
       <Header>
@@ -132,9 +95,7 @@ const SignupForm = () => {
 };
 
 export default SignupForm;
-import styled from "styled-components";
-import { StyledLink } from "../ui/StyledLink";
-import { useNavigate } from "react-router-dom";
+
 const TeamsAndConditions = styled.div`
   display: flex;
   justify-content: center;
