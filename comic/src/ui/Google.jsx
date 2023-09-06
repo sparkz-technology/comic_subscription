@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { FcGoogle } from "react-icons/fc";
 import PropTypes from "prop-types";
+import useGoogle from "../hooks/useGoogle";
 Google.propTypes = {
   children: PropTypes.node.isRequired,
 };
-export const GoogleContainer = styled.div`
+export const GoogleContainer = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,20 +13,34 @@ export const GoogleContainer = styled.div`
   border: 1px solid #bdbdbd;
   border-radius: 30px;
   gap: 10px;
-  height: 40px;
+  height: 60px;
+  width: 100%;
+  background-color: transparent;
+  cursor: pointer;
+
   p {
     font-size: 0.8rem;
     font-weight: bold;
     font-family: "Roboto", sans-serif;
     margin: 0;
   }
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
 `;
 function Google({ children }) {
+  const { Google } = useGoogle();
   return (
-    <GoogleContainer>
-      <FcGoogle size={20} />
-      <p>{children}</p>
-    </GoogleContainer>
+    <>
+      <GoogleContainer onClick={Google}>
+        <FcGoogle size={20} />
+        <p>{children}</p>
+      </GoogleContainer>
+    </>
   );
 }
 

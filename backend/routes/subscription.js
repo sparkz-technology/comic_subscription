@@ -21,7 +21,8 @@ router.post(
       ),
     body("password")
       .trim()
-      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)
+      .isLength({ min: 8 })
+      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
       .withMessage(
         "Password must be at least 8 characters long and contain at least one number, one uppercase and one lowercase letter"
       ),

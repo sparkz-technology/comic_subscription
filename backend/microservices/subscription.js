@@ -1,4 +1,4 @@
-const amqp = require("amqplib");
+const amqp = require("amqplib"); // amqp full form is Advanced Message Queuing Protocol
 async function subscription(queue, user) {
   try {
     const connection = await amqp.connect("amqp://localhost");
