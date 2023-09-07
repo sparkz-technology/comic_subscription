@@ -3,7 +3,7 @@ const passport = require("passport");
 const router = express.Router();
 
 const authController = require("../controllers/auth");
-router.get(
+router.post(
   "/google",
   passport.authenticate(
     "google",

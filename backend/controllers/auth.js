@@ -1,6 +1,7 @@
+/* eslint-disable import/order */
+const config = require("../config/config");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const jwt = require("jsonwebtoken");
-const config = require("../config/config");
 const passport = require("passport");
 const stripe = require("stripe")(config.stripe_secret_key);
 
@@ -18,7 +19,13 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        const googleResponse = await axios.get(
+          `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${accessToken}`
+        );
         // Find or create the user by their Google ID
+        if (!googleResponse.data.email_verified) {
+          return done("Email not verified", null);
+        }
         let user = await User.findOne({ googleId: profile.id });
 
         if (!user) {
@@ -51,12 +58,9 @@ passport.use(
     }
   )
 );
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
 // Handle Google OAuth callback
 exports.googleAuthCallback = async (req, res, next) => {
   if (!req.user) {
@@ -105,12 +109,24 @@ exports.googleAuthCallback = async (req, res, next) => {
     console.log("Customer retrieved from Stripe:", customer);
 
     // Redirect to a success page or return a success JSON response
-    res.json({
-      message: "User successfully authenticated",
-      user: req.user.user.googleId,
-      token: req.user.token,
-      customer: customer,
+    const successRedirectUrl = "http://localhost:5173/login";
+    const script = `<script>
+      window.opener.postMessage('loginSuccess', '*');
+      window.opener.location.href = '${successRedirectUrl}';
+      window.close();
+    </script>`;
+    res.send(script);
+    // send token in cookie and redirect to frontend
+    const { token } = req.user;
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // Set to false for development on localhost
+      sameSite: "Lax", // Or "None" if needed for testing
+      path: "/", // Specify the correct path
+      domain: "localhost", // Specify the correct domain
     });
+
+    res.status(200).json({ message: "Success", customer });
   } catch (error) {
     // Handle errors here
     if (error.statusCode) {

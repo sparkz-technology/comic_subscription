@@ -3,6 +3,7 @@ import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import store from "./Store";
 import GlobalStyles from "./styles/GlobalStyles";
@@ -32,15 +33,19 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const GOOGLE_CLIENT_ID =
+    "677308379740-sc3riuokt0nakmt5vp69ref4euc2lquf.apps.googleusercontent.com";
   return (
     <>
-      <Provider store={store}>
-        <GlobalStyles />
-        <Elements stripe={stripePromise}>
-          <RouterProvider router={router}></RouterProvider>
-        </Elements>
-      </Provider>
-      <Toaster position="top-center" reverseOrder={false} />
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <Provider store={store}>
+          <GlobalStyles />
+          <Elements stripe={stripePromise}>
+            <RouterProvider router={router}></RouterProvider>
+          </Elements>
+        </Provider>
+        <Toaster position="top-center" reverseOrder={false} />
+      </GoogleOAuthProvider>
     </>
   );
 }

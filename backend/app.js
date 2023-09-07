@@ -12,10 +12,18 @@ const passport = require("passport");
 // Configure CORS middleware
 const stripeWebhookOrigin = config.stripe_webhook_orgin; // Stripe's origin for webhook requests
 const origin = "http://localhost:5173"; // Frontend's origin
-const googleOrigin = "https://accounts.google.com";
-const authOrgin = "http://localhost:8000/auth/google";
+const googleOrigin = "https://accounts.google.com/*";
+const authOrgin = "https://accounts.google.com/o/oauth2/v2/auth/*";
 // set origin to * to allow all origins
 // const origin = "*";
+app.use(
+  cors({
+    origin: [origin, stripeWebhookOrigin, googleOrigin, authOrgin],
+    credentials: true, // Allow credentials (cookies, sessions) to be sent with the request
+    methods: ["POST", "GET", "OPTIONS"], // Specify the allowed HTTP methods
+    optionsSuccessStatus: 204, // Return a successful response for all CORS requests
+  })
+);
 app.use(
   cookieSession({
     name: "session",
@@ -25,13 +33,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(
-  cors({
-    origin: [origin, stripeWebhookOrigin, googleOrigin, authOrgin],
-    credentials: true, // Allow credentials (cookies, sessions) to be sent with the request
-    methods: ["POST", "GET", "OPTIONS"], // Specify the allowed HTTP methods
-  })
-);
 
 // Initialize and configure Passport.js
 

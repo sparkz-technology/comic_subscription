@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import { FcGoogle } from "react-icons/fc";
 import PropTypes from "prop-types";
-import useGoogle from "../hooks/useGoogle";
+import { useGoogleLogin } from "@react-oauth/google";
+import Axios from "axios";
+
 Google.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
 export const GoogleContainer = styled.button`
   display: flex;
   align-items: center;
@@ -32,11 +35,25 @@ export const GoogleContainer = styled.button`
     height: 100%;
   }
 `;
+
 function Google({ children }) {
-  const { Google } = useGoogle();
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log(tokenResponse);
+      Axios.post("http://localhost:8000/auth/google", {
+        token: tokenResponse.accessToken,
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error("Axios Error:", error);
+        });
+    },
+  });
   return (
     <>
-      <GoogleContainer onClick={Google}>
+      <GoogleContainer onClick={handleGoogleLogin}>
         <FcGoogle size={20} />
         <p>{children}</p>
       </GoogleContainer>
