@@ -32,6 +32,7 @@ const validationSchema = Yup.object().shape({
 function LoginForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   async function handleSubmit(values) {
     try {
       setLoading(true);

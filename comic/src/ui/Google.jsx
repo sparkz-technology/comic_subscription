@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import { FcGoogle } from "react-icons/fc";
-import { useGoogleLogin } from "@react-oauth/google";
-import { toast } from "react-hot-toast";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+
+import { useEffect } from "react";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
 
 const GoogleContainer = styled.button`
   display: flex;
@@ -26,55 +25,15 @@ const GoogleContainer = styled.button`
   }
 `;
 
+// Google.js
+
 function Google() {
-  const { navigate } = useNavigate();
-
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse.access_token);
-      await handleGoogle(tokenResponse.access_token);
-    },
-    onError: (error) => {
-      console.error("Google Login Error:", error);
-      toast.error("Google Login Error");
-    },
-  });
-
-  async function handleGoogleLoginFailure() {
-    await handleGoogleLogin();
-  }
-
-  async function handleGoogle(access_token) {
-    try {
-      const response = await fetch("http://localhost:8000/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          accessToken: access_token,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log(data);
-      toast.success("Google Login Success");
-      const { customerId, token } = data;
-      Cookies.set("customer", customerId);
-      Cookies.set("token", token);
-      if (customerId) {
-        navigate("/home");
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-      toast.error("Google Login Error");
-      return false;
+  const { token, handleGoogleLoginFailure } = useGoogleAuth();
+  useEffect(() => {
+    if (token) {
+      console.log(token);
     }
-  }
+  }, [token]);
 
   return (
     <GoogleContainer onClick={handleGoogleLoginFailure}>
