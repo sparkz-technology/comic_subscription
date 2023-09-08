@@ -18,11 +18,19 @@ const {
   trialSubscriber,
   deleteTrialSubscribers,
 } = require("./controllers/trialUser");
+async function dbConnect() {
+  try {
+    await mongoose.connect(config.mongo_url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`Connected to MongoDB in Microservice!`);
+  } catch (error) {
+    console.log(error.message); //error message if connection is not successful
+    process.exit(1); //exit with failure
+  }
+}
 
-mongoose.connect(config.mongo_url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 async function connectQuery() {
   try {
     await connect("cancelSubscription");
@@ -38,6 +46,7 @@ async function connectQuery() {
     process.exit(1);
   }
 }
+dbConnect();
 connectQuery();
 async function connect(queue) {
   try {
