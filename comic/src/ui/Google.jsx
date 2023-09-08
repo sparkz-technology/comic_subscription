@@ -1,14 +1,11 @@
 import styled from "styled-components";
 import { FcGoogle } from "react-icons/fc";
-import PropTypes from "prop-types";
 import { useGoogleLogin } from "@react-oauth/google";
-import Axios from "axios";
+import { toast } from "react-hot-toast";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
-Google.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-export const GoogleContainer = styled.button`
+const GoogleContainer = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,37 +24,63 @@ export const GoogleContainer = styled.button`
     font-family: "Roboto", sans-serif;
     margin: 0;
   }
-  button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-  }
 `;
 
-function Google({ children }) {
+function Google() {
+  const { navigate } = useNavigate();
+
   const handleGoogleLogin = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      console.log(tokenResponse);
-      Axios.post("http://localhost:8000/auth/google", {
-        token: tokenResponse.accessToken,
-      })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error("Axios Error:", error);
-        });
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse.access_token);
+      await handleGoogle(tokenResponse.access_token);
+    },
+    onError: (error) => {
+      console.error("Google Login Error:", error);
+      toast.error("Google Login Error");
     },
   });
+
+  async function handleGoogleLoginFailure() {
+    await handleGoogleLogin();
+  }
+
+  async function handleGoogle(access_token) {
+    try {
+      const response = await fetch("http://localhost:8000/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          accessToken: access_token,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      toast.success("Google Login Success");
+      const { customerId, token } = data;
+      Cookies.set("customer", customerId);
+      Cookies.set("token", token);
+      if (customerId) {
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      toast.error("Google Login Error");
+      return false;
+    }
+  }
+
   return (
-    <>
-      <GoogleContainer onClick={handleGoogleLogin}>
-        <FcGoogle size={20} />
-        <p>{children}</p>
-      </GoogleContainer>
-    </>
+    <GoogleContainer onClick={handleGoogleLoginFailure}>
+      <FcGoogle size={20} />
+      <p>Sign in with Google</p>
+    </GoogleContainer>
   );
 }
 

@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const crypto = require("crypto");
+
 const User = require("../models/user");
 
 const { subscription } = require("../microservices/subscription");

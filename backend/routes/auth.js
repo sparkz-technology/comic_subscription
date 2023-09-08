@@ -1,20 +1,10 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
+const axios = require("axios");
 
 const authController = require("../controllers/auth");
-router.post(
-  "/google",
-  passport.authenticate(
-    "google",
-    { scope: ["profile", "email"] },
-    authController.googleAuth
-  )
-);
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { session: false }),
-  authController.googleAuthCallback
-);
+
+router.post("/google", authController.googleLogin);
 
 module.exports = router;
