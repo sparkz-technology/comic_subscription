@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components";
 import { FcGoogle } from "react-icons/fc";
 
@@ -27,7 +28,7 @@ const GoogleContainer = styled.button`
 
 // Google.js
 
-function Google() {
+function Google({ children }) {
   const { token, handleGoogleLoginFailure } = useGoogleAuth();
   useEffect(() => {
     if (token) {
@@ -38,7 +39,7 @@ function Google() {
   return (
     <GoogleContainer onClick={handleGoogleLoginFailure}>
       <FcGoogle size={20} />
-      <p>Sign in with Google</p>
+      <p>{children}</p>
     </GoogleContainer>
   );
 }

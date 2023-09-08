@@ -1,5 +1,5 @@
 // useGoogleAuth.js
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
@@ -14,6 +14,7 @@ export function useGoogleAuth() {
     onSuccess: async (tokenResponse) => {
       console.log(tokenResponse.access_token);
       setToken(tokenResponse.access_token);
+      await authenticate(tokenResponse.access_token);
     },
     onError: (error) => {
       console.error("Google Login Error:", error);
@@ -24,22 +25,14 @@ export function useGoogleAuth() {
   async function handleGoogleLoginFailure() {
     await handleGoogleLogin();
   }
-  const authenticate = useCallback(
-    async (access_token) => {
-      const responce = await authenticateWithGoogle(access_token);
-      if (!responce) return;
-      const { customerId, token } = responce;
-      Cookies.set("customer", customerId);
-      Cookies.set("token", token);
-      navigate("/dashboard");
-    },
-    [navigate]
-  );
-  useEffect(() => {
-    if (token) {
-      authenticate(token);
-    }
-  }, [token, authenticate]);
+  async function authenticate(access_token) {
+    const responce = await authenticateWithGoogle(access_token);
+    if (!responce) return;
+    const { customerId, token } = responce;
+    Cookies.set("customer", customerId);
+    Cookies.set("token", token);
+    navigate("/dashboard");
+  }
 
   return { token, handleGoogleLoginFailure };
 }
