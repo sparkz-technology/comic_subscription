@@ -1,5 +1,5 @@
 const amqp = require("amqplib"); // amqp full form is Advanced Message Queuing Protocol
-async function subscription(queue, user) {
+async function mailServices(queue, user) {
   try {
     const connection = await amqp.connect("amqp://localhost");
     const channel = await connection.createChannel();
@@ -19,4 +19,4 @@ async function subscription(queue, user) {
 // subscription("trialSubscription");
 // subscription("verify");
 // subscription("passwordChanged");
-module.exports = { subscription };
+module.exports = mailServices;

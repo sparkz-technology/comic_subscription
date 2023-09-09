@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const TrialUser = require("../models/trialUser");
-const { subscription } = require("../microservices/subscription");
+const mailServices = require("../microservices/mailServices");
 exports.postUser = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -18,7 +18,7 @@ exports.postUser = async (req, res, next) => {
     await trialuser.save();
     res.status(201).json({ message: "Free trial subscribed.." });
     console.log(trialuser);
-    await subscription("trialSubscription", trialuser);
+    await mailServices("trialSubscription", trialuser);
     // trial(trialuser);
   } catch (err) {
     if (!err.statusCode) {

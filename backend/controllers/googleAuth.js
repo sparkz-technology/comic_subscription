@@ -5,7 +5,7 @@ const stripe = require("stripe")(config.stripe_secret_key);
 
 const User = require("../models/user");
 
-exports.googleLogin = async (req, res, next) => {
+exports.google = async (req, res, next) => {
   try {
     const { accessToken } = req.body;
 

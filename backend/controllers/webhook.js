@@ -1,10 +1,9 @@
 const config = require("../config/config");
 
-const { subscription } = require("../microservices/subscription");
+const mailServices = require("../microservices/mailServices");
 const User = require("../models/user");
 const stripe = require("stripe")(config.stripe_secret_key);
-const endpointSecret =
-  "whsec_885450b317c7eb3d2fe6a111f161fa293b40e8a9c9b99a2d0fa81fa9bee46419";
+const endpointSecret = config.end_point_secret;
 
 // Function to format date
 function formattedDate(date) {
@@ -65,7 +64,7 @@ exports.webhook = async (request, response) => {
         });
         userDeleted.subscriptionStatus = subscriptionDeleted.status;
         await userDeleted.save();
-        await subscription("cancelSubscription", userDeleted);
+        await mailServices("cancelSubscription", userDeleted);
         console.log("Subscription cancelled", "👎");
       } catch (err) {
         console.log(err, "customer.subscription.deleted");
@@ -115,7 +114,7 @@ exports.webhook = async (request, response) => {
         userInvoicePaymentSucceeded.subscriptionStatus =
           invoicePaymentSucceeded.status;
         await userInvoicePaymentSucceeded.save();
-        subscription("subscription", userInvoicePaymentSucceeded);
+        await mailServices("subscription", userInvoicePaymentSucceeded);
         console.log("Subscription renewed" + " " + "🎉");
       } catch (err) {
         console.log(err, "invoice.payment_succeeded");

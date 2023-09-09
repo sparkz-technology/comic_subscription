@@ -6,11 +6,12 @@ import config from "../config";
 
 const priceId = config.PRICE_ID;
 const API_URL = `${config.API_URL}/subscription`;
+const API_URL_STRIPE = `${config.API_URL}/stripe`;
 
 // register customer with stripe
 export const CreateCustomer = async (email, password) => {
   try {
-    const response = await Axios.post(`${API_URL}/create-customer`, {
+    const response = await Axios.post(`${API_URL_STRIPE}/create-customer`, {
       email: email,
       password: password,
     });
@@ -24,7 +25,7 @@ export const CreateCustomer = async (email, password) => {
 // login customer with stripe
 export const RetrieveCustomer = async (email, password) => {
   try {
-    const response = await Axios.post(`${API_URL}/retrieve-customer`, {
+    const response = await Axios.post(`${API_URL_STRIPE}/retrieve-customer`, {
       email: email,
       password: password,
     });
@@ -103,9 +104,12 @@ export const GetSubscriptionDetails = async () => {
 
 export const PostPaswordReset = async (email) => {
   try {
-    const response = await Axios.post(`${API_URL}/reset-password-request`, {
-      email,
-    });
+    const response = await Axios.post(
+      `${API_URL_STRIPE}/reset-password-request`,
+      {
+        email,
+      }
+    );
     const data = await response.data;
     toast.success(data.message);
 
@@ -123,9 +127,12 @@ export const PostVerifyResetToken = async (data) => {
   console.log(code, email);
   console.log(data);
   try {
-    const response = await Axios.post(`${API_URL}/verify-reset-token/${code}`, {
-      email,
-    });
+    const response = await Axios.post(
+      `${API_URL_STRIPE}/verify-reset-token/${code}`,
+      {
+        email,
+      }
+    );
     const data = await response.data;
     toast.success(data.message);
     return data;
@@ -137,7 +144,7 @@ export const PostPasswordReset = async (data) => {
   const { password, token } = data;
   console.log(data);
   try {
-    const response = await Axios.post(`${API_URL}/reset-password`, {
+    const response = await Axios.post(`${API_URL_STRIPE}/reset-password`, {
       password,
       token,
     });
