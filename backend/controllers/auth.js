@@ -1,7 +1,7 @@
 const Axios = require("axios");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
-const stripe = require("stripe")(config.stripe_secret_key); // Replace with your actual Stripe API key
+const stripe = require("stripe")(config.stripe_secret_key);
 
 const User = require("../models/user");
 
@@ -10,9 +10,9 @@ exports.googleLogin = async (req, res, next) => {
     const { accessToken } = req.body;
 
     if (!accessToken) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No access token" });
+      const error = new Error("No access token");
+      error.statusCode = 400;
+      throw error;
     }
 
     // Make the API request with the accessToken
@@ -24,11 +24,14 @@ exports.googleLogin = async (req, res, next) => {
         },
       }
     );
+    // set err for token expired or invalid
 
     const userData = response.data;
 
     if (!userData) {
-      return res.status(400).json({ success: false, message: "No user data" });
+      const error = new Error("No user data");
+      error.statusCode = 400;
+      throw error;
     }
 
     const { email, name, picture } = userData;
@@ -56,14 +59,19 @@ exports.googleLogin = async (req, res, next) => {
     );
 
     res.status(200).json({
-      success: true,
+      message: "User logged in successfully",
       token,
       user: { email, name, picture },
       customerId: user.customerId,
     });
   } catch (error) {
-    console.error("Error fetching user data from Google:", error);
-    const stack = error.stack;
-    res.status(500).json({ success: false, stack });
+    if (error.response && error.response.data && error.response.data.error) {
+      error.message = error.response.data.error.message;
+      error.statusCode = error.response.data.error.code;
+    }
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
   }
 };

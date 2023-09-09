@@ -7,7 +7,7 @@ const config = require("../config/config");
 const logoUrl = path.join(__dirname, "../templates/logo.png");
 
 // Function to send a verification email
-async function sendPasswordChangedMail(consume) {
+async function passwordChangeConfirmation(consume) {
   const { email } = consume;
   try {
     console.log(email);
@@ -15,7 +15,7 @@ async function sendPasswordChangedMail(consume) {
     // Read the email template
     const templatePath = path.join(
       __dirname,
-      "../templates/passwordChange.html"
+      "../templates/passwordChangeConfirmation.html"
     );
     const template = fs.readFileSync(templatePath, "utf-8");
 
@@ -50,4 +50,4 @@ async function sendPasswordChangedMail(consume) {
     return `Error sending email to ${email}: ${error}`;
   }
 }
-module.exports = sendPasswordChangedMail;
+module.exports = passwordChangeConfirmation;
