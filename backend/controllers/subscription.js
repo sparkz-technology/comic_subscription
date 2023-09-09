@@ -20,14 +20,18 @@ exports.postCreateCustomer = async (req, res, next) => {
       error.data = errors.array();
       throw error;
     }
+    const user = await User.findOne({ email: email });
+    // find if a user exists  and has an accountType of google
+    console.log(user, "user");
+
     const hashedPw = await bcrypt.hash(password, 12);
     const customer = await stripe.customers.create({ email: email });
-    const user = new User({
+    const newUser = new User({
       email: email,
       password: hashedPw,
       customerId: customer.id,
     });
-    await user.save();
+    await newUser.save();
     res.status(201).json({ customer: customer, message: "User created" });
   } catch (err) {
     if (!err.statusCode) err.statusCode = 500;
@@ -41,6 +45,11 @@ exports.postRetrieveCustomer = async (req, res, next) => {
     // const loadedUser = await User.findOne({ email: req.body.email });
 
     const user = await User.findOne({ email: email });
+    if (user && user.accountType === "google") {
+      const error = new Error("Please login with google"); //
+      error.statusCode = 401;
+      throw error;
+    }
     if (!user) {
       const error = new Error("User not found");
       error.statusCode = 401; //401:
@@ -172,7 +181,7 @@ exports.postCancelSubscription = async (req, res, next) => {
       subscriptionId
     );
     console.warn("testing purpose");
-    console.log(canceledSubscription, "canceledSubscription");
+    // console.log(canceledSubscription, "canceledSubscription");
     res.status(200).send({ canceledSubscription });
   } catch (err) {
     if (!err.statusCode) {
@@ -184,7 +193,15 @@ exports.postCancelSubscription = async (req, res, next) => {
 exports.postRequestPasswordReset = async (req, res, next) => {
   const { email } = req.body;
   try {
+    if (!email) throw new Error("No email found");
+
     const user = await User.findOne({ email: email });
+    const accountType = user.accountType;
+    if (accountType === "google") {
+      const error = new Error("Please login with google"); //
+      error.statusCode = 401;
+      throw error;
+    }
     if (!user) {
       const error = new Error("No user found");
       error.statusCode = 400;

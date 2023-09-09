@@ -15,6 +15,9 @@ router.post(
       .custom((value) =>
         User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
+            if (userDoc.accountType === "google") {
+              return Promise.reject(new Error("Please login with google"));
+            }
             return Promise.reject(new Error("Email already exists"));
           }
         })

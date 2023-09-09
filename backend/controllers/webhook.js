@@ -1,9 +1,12 @@
 const config = require("../config/config");
+
 const { subscription } = require("../microservices/subscription");
 const User = require("../models/user");
 const stripe = require("stripe")(config.stripe_secret_key);
 const endpointSecret =
   "whsec_885450b317c7eb3d2fe6a111f161fa293b40e8a9c9b99a2d0fa81fa9bee46419";
+
+// Function to format date
 function formattedDate(date) {
   const current_period_end = new Date(date * 1000);
   const options = {
@@ -17,6 +20,8 @@ function formattedDate(date) {
   };
   return current_period_end.toLocaleString("en-US", options);
 }
+
+// Webhook function
 exports.webhook = async (request, response) => {
   const sig = request.headers["stripe-signature"];
 
@@ -29,8 +34,10 @@ exports.webhook = async (request, response) => {
     console.log("Webhook Error: ", err.message);
     return;
   }
+
   let current_period_end;
-  // Handle the event
+
+  // Handle the event based on event type
   switch (event.type) {
     case "customer.subscription.created":
       const subscriptionCreated = event.data.object;
@@ -48,10 +55,8 @@ exports.webhook = async (request, response) => {
       } catch (err) {
         console.log(err, "customer.subscription.created");
       }
-
-      // Then define and call a function to handle the event customer.subscription.created
-
       break;
+
     case "customer.subscription.deleted":
       const subscriptionDeleted = event.data.object;
       try {
@@ -60,12 +65,13 @@ exports.webhook = async (request, response) => {
         });
         userDeleted.subscriptionStatus = subscriptionDeleted.status;
         await userDeleted.save();
-        // await subscription("cancelSubscription", userDeleted);
+        await subscription("cancelSubscription", userDeleted);
+        console.log("Subscription cancelled", "👎");
       } catch (err) {
         console.log(err, "customer.subscription.deleted");
       }
-      // Then define and call a function to handle the event customer.subscription.deleted
       break;
+
     case "customer.subscription.updated":
       const subscriptionUpdated = event.data.object;
       current_period_end = formattedDate(
@@ -84,11 +90,10 @@ exports.webhook = async (request, response) => {
       } catch (err) {
         console.log(err, "customer.subscription.updated");
       }
-      // Then define and call a function to handle the event customer.subscription.updated
       break;
+
     case "charge.succeeded":
       const chargeSucceeded = event.data.object;
-      // Then define and call a function to handle the event charge.succeeded
       try {
         const userCharge = await User.findOne({
           customerId: chargeSucceeded.customer,
@@ -100,32 +105,22 @@ exports.webhook = async (request, response) => {
         console.log(err, "charge.succeeded");
       }
       break;
-    case "payment_intent.succeeded":
-      const paymentIntentSucceeded = event.data.object;
-      try {
-        const userPaymentIntent = await User.findOne({
-          customerId: paymentIntentSucceeded.customer,
-        });
 
-        subscription("subscription", userPaymentIntent);
-      } catch (err) {
-        console.log(err, "payment_intent.succeeded");
-      }
-      // Then define and call a function to handle the event payment_intent.succeeded
-      break;
-    case "invoice.payment_failed":
+    case "invoice.payment_succeeded":
+      const invoicePaymentSucceeded = event.data.object;
       try {
-        const invoicePaymentFailed = event.data.object;
-        const userInvoicePaymentFailed = await User.findOne({
-          customerId: invoicePaymentFailed.customer,
+        const userInvoicePaymentSucceeded = await User.findOne({
+          customerId: invoicePaymentSucceeded.customer,
         });
-        userInvoicePaymentFailed.subscriptionStatus =
-          invoicePaymentFailed.status;
-        await userInvoicePaymentFailed.save();
-        await subscription("cancelSubscription", userInvoicePaymentFailed);
+        userInvoicePaymentSucceeded.subscriptionStatus =
+          invoicePaymentSucceeded.status;
+        await userInvoicePaymentSucceeded.save();
+        subscription("subscription", userInvoicePaymentSucceeded);
+        console.log("Subscription renewed" + " " + "🎉");
       } catch (err) {
-        console.log(err, "invoice.payment_failed");
+        console.log(err, "invoice.payment_succeeded");
       }
+      break;
 
     default:
       console.log(`Unhandled event type ${event.type}`);

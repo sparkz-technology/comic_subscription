@@ -37,7 +37,11 @@ exports.googleLogin = async (req, res, next) => {
 
     if (!user) {
       const customer = await stripe.customers.create({ email });
-      user = new User({ email, customerId: customer.id });
+      user = new User({
+        email,
+        customerId: customer.id,
+        accountType: "google",
+      });
       await user.save();
     }
 

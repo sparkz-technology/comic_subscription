@@ -4,7 +4,7 @@ const userSchema = new Schema(
   {
     email: { type: String },
     password: { type: String },
-    googleId: { type: String },
+    accountType: { type: String, default: "email" },
     customerId: { type: String },
     subscriptionId: { type: String },
     subscriptionStatus: { type: String },
