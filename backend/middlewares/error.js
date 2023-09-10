@@ -6,7 +6,7 @@ module.exports = (error, req, res, next) => {
   if (config.env === "development") {
     res
       .status(status)
-      .json({ message: message, data: data, stack: error.stack });
+      .json({ message: message, data: data, stack: error.stack || "No Stack" });
     return;
   }
   res.status(status).json({ message: message, data: data });

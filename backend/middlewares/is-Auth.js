@@ -5,6 +5,11 @@ const config = require("../config/config");
 
 module.exports = async (req, res, next) => {
   try {
+    if (!req.headers.authorization) {
+      const error = new Error("Not Authenticated");
+      error.statusCode = 401;
+      throw error;
+    }
     const token = req.headers.authorization.split(" ")[1]; //split the token and get the second part
     const decodedToken = await jwt.verify(token, config.jwt_secret);
     req.userId = decodedToken.userId; //add new field to the request
@@ -25,8 +30,9 @@ module.exports = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res
-      .status(401)
-      .json({ message: "You are not authenticated!", error: error });
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
   }
 };
