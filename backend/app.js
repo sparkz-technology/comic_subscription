@@ -41,7 +41,7 @@ app.use("/webhook", express.raw({ type: "application/json" }), webhookRoutes); /
 // Parse JSON and form data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use("/uploads", express.static("uploads"));
 // for form data parsing  app.use(express.urlencoded({ extended: true }));
 app.use("/trial", trialUserRoutes); // user routes
 app.use("/subscription", subscriptionRoutes); // subscription routes

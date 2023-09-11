@@ -2,7 +2,7 @@ const User = require("../models/user");
 
 module.exports = async (req, res, next) => {
   try {
-    const userId = req.body.userId || "64fd647b354bdcbb63ba0ead";
+    const userId = req.body.userId || "64fd6488354bdcbb63ba0eb0";
     console.log(userId);
     const adminUser = await User.findOne({ role: "admin", _id: userId });
     if (!adminUser) {

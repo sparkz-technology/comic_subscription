@@ -1,4 +1,6 @@
 const amqp = require("amqplib");
+const fs = require("fs");
+const path = require("path");
 
 const passwordChangeConfirmation = require("./mails/passwordChangeConfirmation");
 const verifyCode = require("./mails/verifyCode");
@@ -11,6 +13,8 @@ const { subscriber, deleteSubscriber } = require("./controllers/user");
 const scheduleWeeklyComicJob = require("./services/activeSubscription");
 const scheduleTrialEmail = require("./services/trialSubscription");
 
+const pdfFilePath = path.join(__dirname, "/templates/weeklyComic.pdf");
+
 async function connectToQueue(queue) {
   try {
     const connection = await amqp.connect("amqp://localhost");
@@ -20,6 +24,13 @@ async function connectToQueue(queue) {
 
     channel.consume(queue, async (message) => {
       try {
+        if (queue === "weeklyComic") {
+          const pdfBuffer = message.content;
+          fs.writeFileSync(pdfFilePath, pdfBuffer);
+          console.log(`Received message from ${queue}`);
+          return channel.ack(message);
+        }
+
         const consume = JSON.parse(message.content.toString());
         // console.log(`Received message: ${message.content.toString()}`);
 

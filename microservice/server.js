@@ -24,6 +24,7 @@ async function serverStart() {
       "trialSubscription",
       "verify",
       "passwordChanged",
+      "weeklyComic",
     ];
     await Promise.all(queueNames.map(connectToQueue));
     console.log("Connected to all queues!");
