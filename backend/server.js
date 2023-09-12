@@ -13,6 +13,8 @@ async function connect() {
       console.log("Server is running on http://localhost:" + config.port);
     });
   } catch (error) {
+    // Handle the error
+
     console.error("Error connecting to server:", error);
   }
 }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trial Users and Active Subscribers</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="chart"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script>
+      var ctx = document.getElementById("chart").getContext("2d");
+      var chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["January", "February", "March", "April", "May", "June"],
+          datasets: [
+            {
+              label: "Trial Users",
+              data: [100, 150, 200, 250, 300, 350],
+              borderColor: "red",
+              backgroundColor: "rgba(255, 0, 0, 0.2)",
+            },
+            {
+              label: "Active Subscribers",
+              data: [50, 100, 150, 200, 250, 300],
+              borderColor: "blue",
+              backgroundColor: "rgba(0, 0, 255, 0.2)",
+            },
+          ],
+        },
+        options: {
+          title: {
+            text: "Trial Users and Active Subscribers",
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

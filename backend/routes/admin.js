@@ -12,5 +12,11 @@ router.post(
   upload.single("pdf"),
   adminController.postUpload
 );
+// isAuth, add this middleware to protect the route after testing
+router.get("/download", adminController.getDownload);
+
+router.get("/details", adminController.getComicDetails);
+
+router.post("/delete", adminController.deleteComic);
 
 module.exports = router;

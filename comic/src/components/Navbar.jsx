@@ -37,6 +37,8 @@ const StyledNavbar = styled.div`
   gap: 20px;
   background-color: #fff;
   box-sizing: border-box;
+  /* the navbar is fixed to the top of the page  if the user scrolls down the page, the navbar will remain at the top: */
+  z-index: 1;
   h1 {
     font-size: 1.5rem;
     font-weight: 700;
