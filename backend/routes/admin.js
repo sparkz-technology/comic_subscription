@@ -19,4 +19,6 @@ router.get("/details", adminController.getComicDetails);
 
 router.post("/delete", adminController.deleteComic);
 
+router.post("/user/:days", adminController.getComicUserForLineChart);
+
 module.exports = router;

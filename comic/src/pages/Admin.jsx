@@ -1,17 +1,19 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import styled from "styled-components";
+
 import {
-  FaUsers,
   FaFileUpload,
   FaCog /* Add more icons as needed */,
 } from "react-icons/fa"; // Example with FontAwesome icons
+import { RiDashboardFill } from "react-icons/ri";
 // import UploadComicBook from "../components/UploadComicBook";
 import Upload from "../components/Upload";
 import ComicView from "../components/ComicView";
+import UserSignuoChart from "../components/userSignupChart";
 
 function Admin() {
-  const [tab, setTab] = useState("Manage Users");
+  const [tab, setTab] = useState("Dashboard");
 
   const handleTabChange = (newTab) => {
     setTab(newTab);
@@ -25,10 +27,10 @@ function Admin() {
       <AdminContainer>
         <Sidebar>
           <Tab
-            onClick={() => handleTabChange("Manage Users")}
-            className={tab === "Manage Users" ? "active" : ""}
+            onClick={() => handleTabChange("Dashboard")}
+            className={tab === "Dashboard" ? "active" : ""}
           >
-            <FaUsers /> Manage Users
+            <RiDashboardFill /> Dashboard
           </Tab>
           <Tab
             onClick={() => handleTabChange("Upload Comic Book")}
@@ -46,10 +48,9 @@ function Admin() {
         </Sidebar>
         <TabContainer>
           <TabContent>
-            {tab === "Manage Users" && (
+            {tab === "Dashboard" && (
               <>
-                <SectionTitle>Manage Users</SectionTitle>
-                {/* <ManageUsers /> Render the ManageUsers component */}
+                <UserSignuoChart />
               </>
             )}
             {tab === "Upload Comic Book" && (
@@ -121,7 +122,7 @@ const TabContainer = styled.div`
 `;
 
 const TabContent = styled.div`
-  padding: 20px;
+  padding: 10px;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 `;
