@@ -19,6 +19,13 @@ router.get("/details", adminController.getComicDetails);
 
 router.post("/delete", adminController.deleteComic);
 
-router.post("/user/:days", adminController.getComicUserForLineChart);
+router.post("/user/week", adminController.getComicUserForLineChartWeek);
+
+router.post("/user/month", adminController.getComicUserForLineChartMonth);
+
+router.post(
+  "/user/last6months",
+  adminController.getComicUserForLineChartLast6Months
+);
 
 module.exports = router;

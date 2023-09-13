@@ -164,58 +164,122 @@ const TrialUser = require("../models/trialUser");
 
 const moment = require("moment"); // Import the moment.js library for date manipulation
 
-exports.getComicUserForLineChart = async (req, res, next) => {
-  const days = req.params.days || 7; // Get the number of days from the query string
+//for line Chart
+
+exports.getComicUserForLineChartWeek = async (req, res, next) => {
   try {
-    const daysAgo = moment().subtract(days, "days"); // Calculate the date 7 days ago
+    const days = 7; // Parse the number of days from the query string
+    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+    let data = [];
 
-    // Count active users created in the last 7 days
-    const activeUsersLast7Days = await User.find({
-      isSubscribed: "active",
-      createdAt: { $gte: daysAgo.toDate() }, // Filter by creation date
-    }).countDocuments();
+    for (let i = days - 1; i >= 0; i--) {
+      // Start from the most recent day and go back in time
+      const startDate = moment().subtract(i, "days").startOf("day");
+      const endDate = moment(startDate).endOf("day");
 
-    // Count cancelled users created in the last 7 days
-    const cancelledUsersLast7Days = await User.find({
-      isSubscribed: "cancelled",
-      createdAt: { $gte: daysAgo.toDate() }, // Filter by creation date
-    }).countDocuments();
+      const lastWeekUsers = await User.find({
+        createdAt: { $gte: startDate, $lte: endDate },
+      }).countDocuments();
+      const lastWeekTrialUsers = await TrialUser.find({
+        createdAt: { $gte: startDate, $lte: endDate },
+      }).countDocuments();
 
-    // Count trial users created in the last 7 days
-    const trialUsersLast7Days = await TrialUser.find({
-      isSubscribed: "trial",
-      createdAt: { $gte: daysAgo.toDate() }, // Filter by creation date
-    }).countDocuments();
-
-    // Create an array to hold the daily counts
-    const dailyCounts = [];
-
-    // Calculate the current day of the week
-    const today = moment().format("dddd");
-
-    // Create a loop to populate the daily counts
-    for (let i = 0; i < days; i++) {
-      const day = moment().subtract(i, "days").format("dddd");
-
-      // Add counts based on the day of the week
-      const countData = {
-        name: day,
-        activeSubscribers: day === today ? activeUsersLast7Days : 0,
-        trialSubscribers: day === today ? trialUsersLast7Days : 0,
-        canceledSubscriptions: day === today ? cancelledUsersLast7Days : 0,
-      };
-
-      dailyCounts.unshift(countData); // Add to the beginning of the array
+      data.push({
+        name: startDate.format("dddd"),
+        user: lastWeekUsers,
+        trialUser: lastWeekTrialUsers,
+      });
     }
+
     res.status(200).json({
-      message: "Daily Counts fetched successfully",
-      dailyCounts: dailyCounts,
+      message: "Trial Users fetched successfully",
+      data: data, // Use the 'data' variable instead of 'trialUsers'
     });
-    // Now you can use the dailyCounts array as the userData array.
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
+  } catch (error) {
+    console.error("Error in getComicUserForLineChart:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching trial users",
+      error: error.message,
+    });
+  }
+};
+
+exports.getComicUserForLineChartMonth = async (req, res, next) => {
+  try {
+    const weeks = 4; // 4 weeks in a month
+    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+    let data = [];
+
+    for (let i = 0; i < weeks; i++) {
+      // Start from the beginning of the month and move forward by weeks
+      const startDate = moment().startOf("month").add(i, "weeks");
+      const endDate = moment(startDate).endOf("week");
+
+      const weekUsers = await User.find({
+        createdAt: { $gte: startDate, $lte: endDate },
+      }).countDocuments();
+      const weekTrialUsers = await TrialUser.find({
+        createdAt: { $gte: startDate, $lte: endDate },
+      }).countDocuments();
+
+      data.push({
+        name: `Week ${i + 1}`,
+        user: weekUsers,
+        trialUser: weekTrialUsers,
+      });
     }
-    next(err);
+
+    res.status(200).json({
+      message: "Trial Users fetched successfully for the month",
+      data: data,
+    });
+  } catch (error) {
+    console.error("Error in getComicUserForLineChartMonth:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching trial users for the month",
+      error: error.message,
+    });
+  }
+};
+
+exports.getComicUserForLineChartLast6Months = async (req, res, next) => {
+  try {
+    const months = 6; // Last 6 months
+    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+    let data = [];
+
+    const currentDate = moment(); // Get the current date
+    for (let i = months - 1; i >= 0; i--) {
+      // Start from the current month and move back in time by months
+      const startDate = moment(currentDate)
+        .subtract(i, "months")
+        .startOf("month");
+      const endDate = moment(startDate).endOf("month");
+
+      const monthUsers = await User.find({
+        createdAt: { $gte: startDate, $lte: endDate },
+      }).countDocuments();
+      const monthTrialUsers = await TrialUser.find({
+        createdAt: { $gte: startDate, $lte: endDate },
+      }).countDocuments();
+
+      data.push({
+        name: startDate.format("MMMM"),
+        user: monthUsers,
+        trialUser: monthTrialUsers,
+      });
+    }
+
+    res.status(200).json({
+      message: "Trial Users fetched successfully for the last 6 months",
+      data: data,
+    });
+  } catch (error) {
+    console.error("Error in getComicUserForLineChartLast6Months:", error);
+    res.status(500).json({
+      message:
+        "An error occurred while fetching trial users for the last 6 months",
+      error: error.message,
+    });
   }
 };

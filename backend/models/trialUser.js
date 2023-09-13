@@ -6,9 +6,9 @@ const trialUserSchema = new Schema(
       type: String,
       required: true,
     },
-    subscription: {
+    subscriptionStatus: {
+      default: "trial",
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

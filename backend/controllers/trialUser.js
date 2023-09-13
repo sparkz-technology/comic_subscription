@@ -13,7 +13,6 @@ exports.postUser = async (req, res, next) => {
     const { email } = req.body;
     const trialuser = new TrialUser({
       email,
-      subscription: "trial",
     });
     await trialuser.save();
     res.status(201).json({ message: "Free trial subscribed.." });
