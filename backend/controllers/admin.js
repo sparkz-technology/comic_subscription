@@ -283,3 +283,29 @@ exports.getComicUserForLineChartLast6Months = async (req, res, next) => {
     });
   }
 };
+
+exports.getData = async (req, res, next) => {
+  try {
+    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+
+    const [users, trialUsers, activeUsers, cancelUsers] = await Promise.all([
+      User.find().countDocuments(),
+      TrialUser.find().countDocuments(),
+      User.find({ subscription: "active" }).countDocuments(),
+      User.find({ subscription: "cancel" }).countDocuments(),
+    ]);
+    //  users - ( activeUsers + cancelUsers + trialUsers) =what is left
+    const justUsers = users - (activeUsers + cancelUsers + trialUsers);
+
+    res.status(200).json({
+      message: "Pie Chart Data fetched successfully",
+      data: { users, trialUsers, activeUsers, cancelUsers, justUsers },
+    });
+  } catch (error) {
+    console.error("Error in getDataForPieChart:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching data for pie chart",
+      error: error.message,
+    });
+  }
+};

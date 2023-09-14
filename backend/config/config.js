@@ -11,4 +11,6 @@ module.exports = {
   stripe_webhook_orgin: process.env.STRIPE_WEBHOOK_ORIGIN,
   jwt_expires_in_verify: process.env.JWT_EXPIRES_IN_VERIFY,
   end_point_secret: process.env.END_POINT_SECRET,
+  email: process.env.EMAIL,
+  password: process.env.PASSWORD,
 };

@@ -28,4 +28,6 @@ router.post(
   adminController.getComicUserForLineChartLast6Months
 );
 
+router.post("/user/data", adminController.getData);
+
 module.exports = router;

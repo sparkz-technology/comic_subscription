@@ -2,15 +2,12 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import styled from "styled-components";
 
-import {
-  FaFileUpload,
-  FaCog /* Add more icons as needed */,
-} from "react-icons/fa"; // Example with FontAwesome icons
+import { FaFileUpload } from "react-icons/fa"; // Example with FontAwesome icons
 import { RiDashboardFill } from "react-icons/ri";
 // import UploadComicBook from "../components/UploadComicBook";
 import Upload from "../components/Upload";
 import ComicView from "../components/ComicView";
-import UserSignuoChart from "../components/userSignupChart";
+import AdminDashboard from "../components/AdminDashboard";
 
 function Admin() {
   const [tab, setTab] = useState("Dashboard");
@@ -38,19 +35,15 @@ function Admin() {
           >
             <FaFileUpload /> Upload Comic
           </Tab>
-          <Tab
-            onClick={() => handleTabChange("Settings")}
-            className={tab === "Settings" ? "active" : ""}
-          >
-            <FaCog /> Settings
-          </Tab>
+
           {/* Add more tabs with icons here */}
         </Sidebar>
         <TabContainer>
           <TabContent>
             {tab === "Dashboard" && (
               <>
-                <UserSignuoChart />
+                <SectionTitle>Static</SectionTitle>
+                <AdminDashboard />
               </>
             )}
             {tab === "Upload Comic Book" && (
@@ -62,12 +55,7 @@ function Admin() {
                 <Upload />
               </>
             )}
-            {tab === "Settings" && (
-              <>
-                <SectionTitle>Settings</SectionTitle>
-                {/* Add your settings component here */}
-              </>
-            )}
+
             {/* Add more tab content here */}
           </TabContent>
         </TabContainer>
@@ -100,7 +88,7 @@ const Tab = styled.div`
   margin: 0;
   border-radius: 5px;
   transition: 0.2s;
-  color: #000;
+  color: #0d0c22;
   margin-bottom: 10px;
 
   &:hover {
@@ -118,6 +106,7 @@ const TabContainer = styled.div`
   flex-direction: column;
   overflow-y: auto;
   height: 100%;
+  gap: 20px;
   margin-left: 220px; /* Adjust this value to match your sidebar width */
 `;
 

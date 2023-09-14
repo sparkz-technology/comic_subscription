@@ -10,6 +10,7 @@ import {
 
 import axios from "axios";
 import styled from "styled-components";
+import UserLog from "./UserLog";
 
 const Header = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ const FilterBar = styled.div`
   padding: 5px;
   border-radius: 5px;
   background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const FilterButton = styled.button`
@@ -43,7 +45,8 @@ const FilterButton = styled.button`
 
   &:hover {
     cursor: pointer;
-    background-color: #fec;
+    color: #fff;
+    background-color: #11102c;
   }
 
   &:first-child {
@@ -51,7 +54,8 @@ const FilterButton = styled.button`
   }
 
   &.active {
-    background-color: #fca;
+    color: #fff;
+    background-color: #0d0c22;
   }
 `;
 
@@ -113,32 +117,48 @@ const UserSignuoChart = () => {
           </FilterButton>
         </FilterBar>
       </Header>
-      <LineChart
-        width={900}
-        height={400}
-        data={userData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="user" stroke={colors.user} name="User" />
-        <Line
-          type="monotone"
-          dataKey="trialUser"
-          stroke={colors.trialUser}
-          name="Trial User"
-        />
-        <Line
-          type="monotone"
-          dataKey="canceledSubscriptions"
-          stroke={colors.canceledSubscriptions}
-          name="Canceled Subscriptions"
-        />
-      </LineChart>
+      <Container>
+        <LineChart
+          width={800}
+          height={300}
+          data={userData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Line
+            type="monotone"
+            dataKey="user"
+            stroke={colors.user}
+            name="User"
+          />
+          <Line
+            type="monotone"
+            dataKey="trialUser"
+            stroke={colors.trialUser}
+            name="Trial User"
+          />
+          <Line
+            type="monotone"
+            dataKey="canceledSubscriptions"
+            stroke={colors.canceledSubscriptions}
+            name="Canceled Subscriptions"
+          />
+        </LineChart>
+        <UserLog />
+      </Container>
     </>
   );
 };
 
 export default UserSignuoChart;
+const Container = styled.section`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 20px;
+  background-color: #fff;
+`;

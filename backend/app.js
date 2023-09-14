@@ -39,8 +39,8 @@ if (config.env === "development") {
 app.use("/webhook", express.raw({ type: "application/json" }), webhookRoutes); // webhook routes (Stripe
 //body parser is used to parse the incoming request bodies in a middleware before you handle it
 // Parse JSON and form data
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use("/uploads", express.static("uploads"));
 // for form data parsing  app.use(express.urlencoded({ extended: true }));
 app.use("/trial", trialUserRoutes); // user routes
