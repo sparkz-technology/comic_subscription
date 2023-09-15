@@ -149,6 +149,7 @@ exports.deleteComic = async (req, res, next) => {
 
       res.status(200).json({
         message: "File deleted successfully",
+        status: "Not_Uploaded",
       });
     });
   } catch (err) {

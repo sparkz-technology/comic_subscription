@@ -12,7 +12,7 @@ const StyledModal = styled.div`
   transform: translate(-50%, -50%);
   background-color: #fff;
   border-radius: 5px;
-  /* box-shadow: var(--shadow-lg); */
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   padding: 3.2rem 4rem;
   transition: all 0.5s;
 `;
@@ -33,7 +33,7 @@ const Button = styled.button`
   background: none;
   border: none;
   padding: 0.4rem;
-  /* border-radius: var(--border-radius-sm); */
+  border-radius: 50%;
   transform: translateX(0.8rem);
   transition: all 0.2s;
   position: absolute;

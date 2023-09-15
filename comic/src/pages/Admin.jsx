@@ -6,7 +6,7 @@ import { FaFileUpload } from "react-icons/fa"; // Example with FontAwesome icons
 import { RiDashboardFill } from "react-icons/ri";
 // import UploadComicBook from "../components/UploadComicBook";
 import Upload from "../components/Upload";
-import ComicView from "../components/ComicView";
+import ComicUpload from "../components/ComicUpload";
 import AdminDashboard from "../components/AdminDashboard";
 
 function Admin() {
@@ -42,7 +42,7 @@ function Admin() {
           <TabContent>
             {tab === "Dashboard" && (
               <>
-                <SectionTitle>Static</SectionTitle>
+                <SectionTitle>Dashboard</SectionTitle>
                 <AdminDashboard />
               </>
             )}
@@ -51,7 +51,7 @@ function Admin() {
                 <SectionTitle>Upload Comic Book</SectionTitle>
 
                 {/* <UploadComicBook /> */}
-                <ComicView />
+                <ComicUpload />
                 <Upload />
               </>
             )}

@@ -4,6 +4,8 @@ import { Provider } from "react-redux";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import store from "./Store";
 import GlobalStyles from "./styles/GlobalStyles";
@@ -33,21 +35,32 @@ const router = createBrowserRouter([
   },
   { path: "*", element: <h1>Not Found</h1> },
 ]);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // staleTime: 60 * 1000,
+      staleTime: 0,
+    },
+  },
+});
 
 function App() {
   const GOOGLE_CLIENT_ID =
     "677308379740-sc3riuokt0nakmt5vp69ref4euc2lquf.apps.googleusercontent.com";
   return (
     <>
-      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <Provider store={store}>
-          <GlobalStyles />
-          <Elements stripe={stripePromise}>
-            <RouterProvider router={router}></RouterProvider>
-          </Elements>
-        </Provider>
-        <Toaster position="top-center" reverseOrder={false} />
-      </GoogleOAuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+          <Provider store={store}>
+            <GlobalStyles />
+            <Elements stripe={stripePromise}>
+              <RouterProvider router={router}></RouterProvider>
+            </Elements>
+          </Provider>
+          <Toaster position="top-center" reverseOrder={false} />
+        </GoogleOAuthProvider>
+      </QueryClientProvider>
     </>
   );
 }

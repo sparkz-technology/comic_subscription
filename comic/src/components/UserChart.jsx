@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useState } from "react";
 import {
   LineChart,
   Line,
@@ -6,11 +7,12 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Legend,
 } from "recharts";
-
-import axios from "axios";
 import styled from "styled-components";
 import UserLog from "./UserLog";
+import { useUserChart } from "../hooks/useUserChart";
+import Loader from "../ui/Loader";
 
 const Header = styled.div`
   display: flex;
@@ -19,7 +21,7 @@ const Header = styled.div`
 `;
 
 const SectionTitle = styled.h1`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
 `;
 
@@ -59,43 +61,33 @@ const FilterButton = styled.button`
   }
 `;
 
-const UserSignuoChart = () => {
-  const [userData, setUserData] = useState([]);
+const UserChart = () => {
   const [filter, setFilter] = useState("week");
+  const { data, isLoading, error } = useUserChart(filter);
 
-  const handleUserData = useCallback(async (type) => {
-    try {
-      const response = await axios.post(
-        `http://localhost:8000/admin/user/${type}`
-      );
-      const data = response.data;
-      setUserData(data.data);
-      setFilter(type);
-      console.log(data.data);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    handleUserData("week");
-    setFilter("week");
-  }, [handleUserData]);
-
-  function handleFilterClick(type) {
-    handleUserData(type);
-  }
+  const handleFilterClick = (filter) => {
+    setFilter(filter);
+  };
 
   const colors = {
     user: "#7e23f6",
     trialUser: "#4ECDC4",
-    canceledSubscriptions: "#FF6B6B",
   };
+  // if (isLoading) {
+  //   return (
+  //     <LoaderContainer>
+  //       <Loader />
+  //     </LoaderContainer>
+  //   );
+  // }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <>
       <Header>
-        <SectionTitle>Dashboard</SectionTitle>
+        <SectionTitle>User analytics</SectionTitle>
         <FilterBar>
           <FilterButton
             className={filter === "week" ? "active" : ""}
@@ -118,42 +110,44 @@ const UserSignuoChart = () => {
         </FilterBar>
       </Header>
       <Container>
-        <LineChart
-          width={800}
-          height={300}
-          data={userData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="user"
-            stroke={colors.user}
-            name="User"
-          />
-          <Line
-            type="monotone"
-            dataKey="trialUser"
-            stroke={colors.trialUser}
-            name="Trial User"
-          />
-          <Line
-            type="monotone"
-            dataKey="canceledSubscriptions"
-            stroke={colors.canceledSubscriptions}
-            name="Canceled Subscriptions"
-          />
-        </LineChart>
+        {isLoading ? (
+          <LoaderContainer>
+            <Loader />
+          </LoaderContainer>
+        ) : (
+          <LineChart
+            width={800}
+            height={300}
+            data={data}
+            margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Legend />
+
+            <Tooltip />
+            <Line
+              type="monotone"
+              dataKey="user"
+              stroke={colors.user}
+              name="User"
+            />
+            <Line
+              type="monotone"
+              dataKey="trialUser"
+              stroke={colors.trialUser}
+              name="Trial User"
+            />
+          </LineChart>
+        )}
         <UserLog />
       </Container>
     </>
   );
 };
 
-export default UserSignuoChart;
+export default UserChart;
 const Container = styled.section`
   display: flex;
   align-items: center;
@@ -161,4 +155,11 @@ const Container = styled.section`
   height: 100%;
   gap: 20px;
   background-color: #fff;
+`;
+const LoaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 800px;
+  height: 300px;
 `;

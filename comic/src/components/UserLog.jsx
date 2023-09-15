@@ -1,5 +1,3 @@
-import Axios from "axios";
-import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaUser,
@@ -8,6 +6,8 @@ import {
   FaUserTimes,
   FaUserSlash,
 } from "react-icons/fa";
+import { useUserLog } from "../hooks/useUserLog";
+import Loader from "../ui/Loader";
 
 const Container = styled.div`
   width: 100%;
@@ -17,10 +17,6 @@ const StyledUserLog = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  /* padding: 10px; */
-  /* background-color: #f2f2f2; */
-  /* border-radius: 10px; */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 `;
 
 const Header = styled.div`
@@ -56,24 +52,16 @@ const HeaderIcon = styled.div`
 `;
 
 function UserLog() {
-  const [userData, setUserData] = useState({});
-
-  const handleUserData = useCallback(async () => {
-    try {
-      const response = await Axios.post(
-        `http://localhost:8000/admin/user/data`
-      );
-      const data = response.data;
-      setUserData(data.data);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    handleUserData();
-  }, [handleUserData]);
-
+  const { data, isLoading, error } = useUserLog();
+  if (isLoading)
+    return (
+      <StyledUserLog>
+        <Container>
+          <Loader />
+        </Container>
+      </StyledUserLog>
+    );
+  if (error) return "An error has occurred: " + error.message;
   return (
     <StyledUserLog>
       <Container>
@@ -82,35 +70,35 @@ function UserLog() {
             <FaUserTimes />
           </HeaderIcon>
           <HeaderTitle titleColor="#fff">Cancelled</HeaderTitle>
-          <h1 style={{ color: "#fff" }}>{userData.cancelUsers}</h1>
+          <h1 style={{ color: "#fff" }}>{data?.cancelUsers || 0}</h1>
         </Header>
         <Header backgroundColor="#50CB93">
           <HeaderIcon iconColor="#fff">
             <FaUserCheck />
           </HeaderIcon>
           <HeaderTitle titleColor="#fff">Active</HeaderTitle>
-          <h1 style={{ color: "#fff" }}>{userData.activeUsers}</h1>
+          <h1 style={{ color: "#fff" }}>{data?.activeUsers || 0}</h1>
         </Header>
         <Header backgroundColor="#F2C94C">
           <HeaderIcon iconColor="#fff">
             <FaUserFriends />
           </HeaderIcon>
           <HeaderTitle titleColor="#fff">Trial</HeaderTitle>
-          <h1 style={{ color: "#fff" }}>{userData.trialUsers}</h1>
+          <h1 style={{ color: "#fff" }}>{data?.trialUsers || 0}</h1>
         </Header>
         <Header backgroundColor="#FF8A65">
           <HeaderIcon iconColor="#fff">
             <FaUserSlash />
           </HeaderIcon>
           <HeaderTitle titleColor="#fff">Just</HeaderTitle>
-          <h1 style={{ color: "#fff" }}>{userData.justUsers}</h1>
+          <h1 style={{ color: "#fff" }}>{data?.justUsers || 0}</h1>
         </Header>
         <Header backgroundColor="#82A4FF">
           <HeaderIcon iconColor="#fff">
             <FaUser />
           </HeaderIcon>
           <HeaderTitle titleColor="#fff">All</HeaderTitle>
-          <h1 style={{ color: "#fff" }}>{userData.users}</h1>
+          <h1 style={{ color: "#fff" }}>{data?.users || 0}</h1>
         </Header>
       </Container>
     </StyledUserLog>

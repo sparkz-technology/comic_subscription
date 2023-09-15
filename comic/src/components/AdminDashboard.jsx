@@ -1,8 +1,8 @@
-import UserSignuoChart from "./userSignupChart";
+import UserChart from "./UserChart";
 function AdminDashboard() {
   return (
     <>
-      <UserSignuoChart />
+      <UserChart />
     </>
   );
 }
