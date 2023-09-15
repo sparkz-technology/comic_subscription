@@ -300,8 +300,6 @@ exports.getData = async (req, res, next) => {
       }).countDocuments(),
     ]);
 
-    //  users - ( activeUsers + cancelUsers + trialUsers) =what is left
-    
     const justUsers = users - (activeUsers + cancelUsers + trialUsers);
 
     res.status(200).json({
