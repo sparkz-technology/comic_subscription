@@ -39,9 +39,15 @@ function LoginForm() {
       const responce = await RetrieveCustomer(values.email, values.password);
       setLoading(false);
       if (!responce) return;
-      const { customer, token } = responce;
+      const { customer, token, role } = responce;
       Cookies.set("customer", customer.id);
       Cookies.set("token", token);
+      Cookies.set("role", role);
+
+      if (role === "ADMIN") {
+        navigate("/admin");
+        return;
+      }
       navigate("/dashboard");
     } catch (error) {
       console.error("Error creating customer:", error);

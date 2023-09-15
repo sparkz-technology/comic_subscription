@@ -63,6 +63,7 @@ exports.google = async (req, res, next) => {
       token,
       user: { email, name, picture },
       customerId: user.customerId,
+      role: user.role,
     });
   } catch (error) {
     if (error.response && error.response.data && error.response.data.error) {

@@ -6,7 +6,7 @@ const pdfFilePath = path.join(__dirname, "../uploads/", "comic.pdf");
 
 exports.postUpload = async (req, res, next) => {
   try {
-    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+    const userId = req.userId || "6503f47942145d600dc1b480";
     const file = req.file;
 
     if (!userId) {
@@ -52,7 +52,7 @@ exports.postUpload = async (req, res, next) => {
 };
 
 exports.getDownload = async (req, res, next) => {
-  const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+  const userId = req.userId || "6503f47942145d600dc1b480";
 
   try {
     const user = await User.findById(userId);
@@ -88,7 +88,7 @@ exports.getDownload = async (req, res, next) => {
 };
 
 exports.getComicDetails = async (req, res, next) => {
-  const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+  const userId = req.userId || "6503f47942145d600dc1b480";
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -121,7 +121,7 @@ exports.getComicDetails = async (req, res, next) => {
 };
 
 exports.deleteComic = async (req, res, next) => {
-  const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+  const userId = req.userId || "6503f47942145d600dc1b480";
 
   try {
     const user = await User.findById(userId);
@@ -170,7 +170,7 @@ const moment = require("moment"); // Import the moment.js library for date manip
 exports.getComicUserForLineChartWeek = async (req, res, next) => {
   try {
     const days = 7; // Parse the number of days from the query string
-    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+    const userId = req.userId || "6503f47942145d600dc1b480";
     let data = [];
 
     for (let i = days - 1; i >= 0; i--) {
@@ -208,7 +208,7 @@ exports.getComicUserForLineChartWeek = async (req, res, next) => {
 exports.getComicUserForLineChartMonth = async (req, res, next) => {
   try {
     const weeks = 4; // 4 weeks in a month
-    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+    const userId = req.userId || "6503f47942145d600dc1b480";
     let data = [];
 
     for (let i = 0; i < weeks; i++) {
@@ -246,7 +246,7 @@ exports.getComicUserForLineChartMonth = async (req, res, next) => {
 exports.getComicUserForLineChartLast6Months = async (req, res, next) => {
   try {
     const months = 6; // Last 6 months
-    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+    const userId = req.userId || "6503f47942145d600dc1b480";
     let data = [];
 
     const currentDate = moment(); // Get the current date
@@ -287,15 +287,21 @@ exports.getComicUserForLineChartLast6Months = async (req, res, next) => {
 
 exports.getData = async (req, res, next) => {
   try {
-    const userId = req.userId || "64fd6488354bdcbb63ba0eb0";
+    const userId = req.userId || "6503f47942145d600dc1b480";
 
     const [users, trialUsers, activeUsers, cancelUsers] = await Promise.all([
       User.find().countDocuments(),
       TrialUser.find().countDocuments(),
-      User.find({ subscription: "active" }).countDocuments(),
-      User.find({ subscription: "cancel" }).countDocuments(),
+      User.find({
+        subscriptionStatus: "active",
+      }).countDocuments(),
+      User.find({
+        subscriptionStatus: "cancelled",
+      }).countDocuments(),
     ]);
+
     //  users - ( activeUsers + cancelUsers + trialUsers) =what is left
+    
     const justUsers = users - (activeUsers + cancelUsers + trialUsers);
 
     res.status(200).json({

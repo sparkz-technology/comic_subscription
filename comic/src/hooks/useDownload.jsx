@@ -5,7 +5,7 @@ import { Download } from "../services/apiAdmin";
 
 export default function useUpload() {
   const mutationFn = () => Download();
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isLoading, error } = useMutation({
     mutationFn,
     onSuccess: () => {
       toast.success("Comic downloaded initiated.");
@@ -15,5 +15,5 @@ export default function useUpload() {
     },
   });
 
-  return { mutate, isDownloading: isLoading };
+  return { mutate, isDownloading: isLoading, isDownloadError: error };
 }

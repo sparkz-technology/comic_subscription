@@ -4,6 +4,7 @@ const User = require("../models/user");
 const config = require("../config/config");
 
 module.exports = async (req, res, next) => {
+  console.log("in is-auth", req.headers.authorization);
   try {
     if (!req.headers.authorization) {
       const error = new Error("Not Authenticated");

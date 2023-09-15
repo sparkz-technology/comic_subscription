@@ -31,7 +31,7 @@ export const RetrieveCustomer = async (email, password) => {
     });
     const data = await response.data;
 
-    toast.success("Customer login successfully");
+    toast.success("Login successfully");
     return data;
   } catch (error) {
     toast.error(error.response.data.message || error.message);

@@ -12,9 +12,14 @@ function ComicUpload() {
   function handleDelete() {
     mutate();
   }
-  const { mutate: handleDownload, isDownloading } = useDownload();
-  if (error || deleteError)
-    return <div>Something went wrong ...{deleteError.message}</div>;
+  const {
+    mutate: handleDownload,
+    isDownloading,
+    isDownloadError,
+  } = useDownload();
+  if (error || (deleteError && deleteError.message) || isDownloadError) {
+    return <div>Something went wrong ...</div>;
+  }
 
   return (
     <ComicContainer>

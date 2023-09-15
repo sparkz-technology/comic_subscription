@@ -2,19 +2,18 @@ const User = require("../models/user");
 
 module.exports = async (req, res, next) => {
   try {
-    const userId = req.body.userId || "64fd6488354bdcbb63ba0eb0";
-    console.log(userId);
-    const adminUser = await User.findOne({ role: "admin", _id: userId });
+    const userId = req.userId;
+    console.log(userId, "in is-admin");
+
+    // Check if the user has ADMIN role and is the same user
+    const adminUser = await User.findOne({ role: "ADMIN", _id: userId });
+
     if (!adminUser) {
       const error = new Error("No Admin User Found");
-      error.statusCode = 422;
+      error.statusCode = 403; // Use 403 for "Not Authorized" error
       throw error;
     }
-    if (adminUser.role !== "admin") {
-      const error = new Error("Not Authorized");
-      error.statusCode = 422;
-      throw error;
-    }
+
     next();
   } catch (error) {
     if (!error.statusCode) {

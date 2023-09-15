@@ -83,6 +83,7 @@ exports.postRetrieveCustomer = async (req, res, next) => {
       customer: customer,
       message: "User logged in successfully",
       token: token,
+      role: loadedUser.role,
     });
     // }
   } catch (err) {

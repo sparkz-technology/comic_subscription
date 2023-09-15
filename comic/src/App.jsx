@@ -17,6 +17,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Admin from "./pages/Admin";
+import AdminProtectedRoute from "./pages/AdminProtectedRoute";
 const stripePromise = loadStripe(config.STRIPE_PUBLIC_KEY);
 
 const router = createBrowserRouter([
@@ -24,7 +25,14 @@ const router = createBrowserRouter([
   { path: "/signup", element: <Signup /> },
   { path: "/login", element: <Login /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
-  { path: "/admin", element: <Admin /> },
+  {
+    path: "/admin",
+    element: (
+      <AdminProtectedRoute>
+        <Admin />
+      </AdminProtectedRoute>
+    ),
+  },
   {
     path: "/dashboard",
     element: (
