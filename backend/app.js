@@ -5,6 +5,9 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const bodyParser = require("body-parser");
 const config = require("./config/config");
+const fileAutoDelete = require("./utils/fileAutoDelete");
+
+fileAutoDelete();
 
 // Configure CORS middleware
 
